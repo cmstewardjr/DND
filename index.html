@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Master Toolkit</title>
+    <style>
+        /* --- GLOBAL STYLES --- */
+        :root {
+            --primary-bg: #1a1a1d;
+            --secondary-bg: #2d2d34;
+            --card-bg: #25252a;
+            --text-color: #e2e2e2;
+            --header-color: #c5c6c7;
+            --accent-color: #950740;
+            --accent-hover: #c30752;
+            --border-color: #4a4a4a;
+            --font-main: 'Georgia', serif;
+            --font-header: 'Trajan Pro', 'Palatino Linotype', serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- PAGE VISIBILITY --- */
+        .page {
+            display: none; /* All pages are hidden by default */
+        }
+
+        .page.active {
+            display: block; /* The active page is shown */
+        }
+
+        /* --- HEADERS AND TEXT --- */
+        h1, h2 {
+            font-family: var(--font-header);
+            color: var(--header-color);
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: var(--accent-color);
+        }
+
+        h2 {
+            font-size: 1.8em;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 25px;
+            font-style: italic;
+            color: #b0b0b0;
+        }
+
+        /* --- BUTTON STYLES --- */
+        .btn {
+            display: block;
+            width: 80%;
+            max-width: 400px;
+            padding: 15px 20px;
+            margin: 15px auto;
+            font-family: var(--font-header);
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-return {
+            background-color: #4a4a4a;
+            margin-top: 30px;
+        }
+
+        .btn-return:hover {
+            background-color: #6a6a6a;
+        }
+
+        /* --- OUTPUT AREA --- */
+        .output-area {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            white-space: pre-wrap; /* Preserves formatting */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            font-size: 1.1em;
+        }
+        
+        .output-area strong {
+            color: var(--header-color);
+        }
+
+        /* --- MAIN PAGE SPECIFIC STYLES --- */
+        #main-page .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        #main-page .btn {
+            width: 100%;
+        }
+
+
+        /* --- SPELLCRAFT SCRIBE SPECIFIC STYLES --- */
+        .spellcraft-layout {
+            display: flex;
+            gap: 20px;
+            height: 60vh;
+        }
+
+        .tome {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            background: #e8dcb5;
+            color: #3b2f2f;
+            border: 10px solid #5a3a22;
+            border-radius: 5px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.7);
+            padding: 20px;
+        }
+
+        .chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            border: 1px solid #c8b898;
+            padding: 10px;
+            background: #fdf6e3;
+        }
+        
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .user-message {
+            background-color: #d1e7dd;
+            text-align: right;
+        }
+        
+        .ai-message {
+            background-color: #f8d7da;
+        }
+        
+        .ai-message pre {
+            background: #2b2b2b;
+            color: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #c8b898;
+            border-radius: 5px;
+            background: #fdf6e3;
+        }
+        
+        .chat-input-area button {
+            padding: 10px 15px;
+            background: #6d4c41;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .chat-input-area button:hover {
+            background: #4e342e;
+        }
+
+        .spellbook-sidebar {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        .spellbook-sidebar h3 {
+            text-align: center;
+            margin-top: 0;
+            color: var(--header-color);
+        }
+
+        .spellbook-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .spellbook-list li {
+            padding: 10px;
+            background: var(--secondary-bg);
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .spellbook-list li:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .api-key-area {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .api-key-area input {
+            padding: 8px;
+            width: 80%;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ====================================================== -->
+        <!-- ==================== MAIN PAGE ======================= -->
+        <!-- ====================================================== -->
+        <div id="main-page" class="page active">
+            <h1>D&D Master Toolkit</h1>
+            <p>Your unified, single-file application for on-the-fly D&D content generation.</p>
+            <div class="grid">
+                <button class="btn" onclick="showPage('spellcraft-scribe')">Spellcraft Scribe</button>
+                <button class="btn" onclick="showPage('npc-populator')">Instant NPC Populator</button>
+                <button class="btn" onclick="showPage('location-generator')">On-the-Fly Location</button>
+                <button class="btn" onclick="showPage('situational-catalyst')">Situational Catalyst</button>
+                <button class="btn" onclick="showPage('environmental-generator')">Dynamic Environment</button>
+                <button class="btn" onclick="showPage('puzzle-trap-creator')">Quick Puzzle/Trap</button>
+            </div>
+        </div>
+
+        <!-- ====================================================== -->
+        <!-- ================ SPELLCRAFT SCRIBE =================== -->
+        <!-- ====================================================== -->
+        <div id="spellcraft-scribe" class="page">
+            <h2>Spellcraft Scribe</h2>
+            <p>Generate detailed D&D 5e spells from your ideas using a powerful AI. <br><strong>Requires a Google Gemini API Key.</strong></p>
+            
+             <div class="api-key-area">
+                <input type="password" id="apiKeyInput" placeholder="Enter Your Google Gemini API Key Here">
+            </div>
+            
+            <div class="spellcraft-layout">
+                <div class="tome">
+                    <div class="chat-history" id="chat-history">
+                        <!-- Chat messages will be appended here -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="spell-idea-input" placeholder="e.g., A cantrip that makes flowers wilt">
+                        <button id="send-spell-idea">Conjure</button>
+                    </div>
+                </div>
+                <div class="spellbook-sidebar">
+                    <h3>My Spellbook</h3>
+                    <ul class="spellbook-list" id="spellbook-list">
+                        <!-- Saved spells will appear here -->
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+        
+        <!-- ====================================================== -->
+        <!-- ================ INSTANT NPC POPULATOR =============== -->
+        <!-- ====================================================== -->
+        <div id="npc-populator" class="page">
+            <h2>Instant NPC Populator</h2>
+            <p>Create a unique non-player character with a single click.</p>
+            <button class="btn" id="generate-npc-btn">Generate NPC</button>
+            <div class="output-area" id="npc-output">Your generated NPC will appear here.</div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+
+        <!-- ====================================================== -->
+        <!-- ============= ON-THE-FLY LOCATION GENERATOR ========== -->
+        <!-- ====================================================== -->
+        <div id="location-generator" class="page">
+            <h2>On-the-Fly Location Generator</h2>
+            <p>Instantly generate a vivid location description based on sensory details.</p>
+            <button class="btn" id="generate-location-btn">Generate Location</button>
+            <div class="output-area" id="location-output">Your generated location will appear here.</div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+        
+        <!-- ====================================================== -->
+        <!-- ================ SITUATIONAL CATALYST ================ -->
+        <!-- ====================================================== -->
+        <div id="situational-catalyst" class="page">
+            <h2>Situational Catalyst</h2>
+            <p>Generate a simple event or plot hook to move the story forward.</p>
+            <button class="btn" id="generate-catalyst-btn">Generate Catalyst</button>
+            <div class="output-area" id="catalyst-output">Your generated plot hook will appear here.</div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+
+        <!-- ====================================================== -->
+        <!-- ============ DYNAMIC ENVIRONMENTAL GENERATOR ========= -->
+        <!-- ====================================================== -->
+        <div id="environmental-generator" class="page">
+            <h2>Dynamic Environmental Generator</h2>
+            <p>Describe the current environment to add atmosphere to your scene.</p>
+            <button class="btn" id="generate-environment-btn">Generate Environment</button>
+            <div class="output-area" id="environment-output">Your generated environment will appear here.</div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+
+        <!-- ====================================================== -->
+        <!-- ============= QUICK PUZZLE AND TRAP CREATOR ========== -->
+        <!-- ====================================================== -->
+        <div id="puzzle-trap-creator" class="page">
+            <h2>Quick Puzzle and Trap Creator</h2>
+            <p>Generate a simple, text-based puzzle or trap, complete with a solution.</p>
+            <button class="btn" id="generate-puzzle-trap-btn">Generate Puzzle or Trap</button>
+            <div class="output-area" id="puzzle-trap-output">Your generated challenge will appear here.</div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+    </div>
+
+    <script>
+    // ================================================================= //
+    // ======================= APP NAVIGATION ========================== //
+    // ================================================================= //
+
+    const pages = document.querySelectorAll('.page');
+
+    function showPage(pageId) {
+        pages.forEach(page => {
+            if (page.id === pageId) {
+                page.classList.add('active');
+            } else {
+                page.classList.remove('active');
+            }
+        });
+    }
+
+    // ================================================================= //
+    // ================== "EMBEDDED AI" DATA SETS ====================== //
+    // ================================================================= //
+
+    // --- Helper Function ---
+    const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    // --- NPC Data ---
+    const npcData = {
+        firstNames: ["Alistair", "Briar", "Corbin", "Delilah", "Elara", "Finnian", "Gwen", "Jasper", "Lyra", "Orion", "Phoebe", "Ronan", "Seraphina", "Thorne"],
+        lastNames: ["Blackwood", "Stonehand", "Swiftwater", "Shadowglen", "Ironhide", "Silverwind", "Oakhart", "Nightbreeze", "Sunstrider", "Stormcaller"],
+        quirks: [
+            "constantly polishing a small, smooth stone.",
+            "speaks only in questions.",
+            "has an irrational fear of chickens.",
+            "hums a jaunty tune completely off-key.",
+            "refers to themself in the third person.",
+            "collects odd-shaped mushrooms.",
+            "insists on paying for everything with seashells.",
+            "never blinks, just stares intently.",
+            "has a ridiculously over-the-top sneeze.",
+            "believes their pet rock can predict the weather."
+        ],
+        secrets: [
+            "is a disgraced noble living in exile.",
+            "is an informant for the local thieves' guild.",
+            "owes a life debt to a powerful hag.",
+            "is secretly a polymorphed brass dragon.",
+            "stole their 'family heirloom' from a tomb.",
+            "can speak with ghosts, but is terrified of them.",
+            "is searching for a long-lost sibling.",
+            "is the sole survivor of a cursed expedition.",
+            "is running from a powerful magical curse.",
+            "knows the location of a hidden treasure but can't retrieve it alone."
+        ]
+    };
+
+    // --- Location Data ---
+    const locationData = {
+        sights: [
+            "Towering, moss-covered statues of forgotten kings line the path.", "A shimmering, iridescent waterfall cascades into a crystal-clear pool.", "Sunlight filters through a dense canopy, dappling the forest floor in green and gold.", "The skeletal remains of a colossal beast are half-buried in the sand.", "Floating islands of earth and stone drift lazily across the sky.", "Bioluminescent fungi cast an eerie, blue-green glow on the cavern walls.", "A dilapidated clock tower stands frozen at a minute to midnight.", "The cobblestone streets are eerily clean and completely deserted."
+        ],
+        sounds: [
+            "the distant, mournful howl of a lone wolf.", "the gentle lapping of water against a rocky shore.", "an unsettling silence, where even the wind seems to hold its breath.", "the constant, rhythmic dripping of water echoing in a vast space.", "the cheerful chirping of unseen birds mixed with the buzz of insects.", "the faint, melodious sound of a flute played on the breeze.", "the crackle of a warm campfire and the chirping of crickets.", "a low, guttural rumbling from deep within the earth."
+        ],
+        smells: [
+            "the earthy scent of damp soil and decaying leaves after a fresh rain.", "the sharp, briny tang of salt and sea.", "the cloying sweetness of an unknown, exotic flower.", "the acrid smell of sulfur and brimstone from a nearby volcanic vent.", "the comforting aroma of baking bread and roasting meat from a nearby tavern.", "the dusty, musty smell of ancient paper and forgotten lore.", "the metallic scent of old blood and rust.", "the crisp, clean smell of pine and cold mountain air."
+        ]
+    };
+    
+    // --- Catalyst Data ---
+    const catalystData = [
+        "A frantic child runs up to the party, pleading for help finding their lost pet, which they say was 'a talking squirrel with a tiny crown'.",
+        "The party finds a beautifully crafted, locked chest on the side of the road with no key in sight. It hums with a faint magical energy.",
+        "A courier, clutching a sealed letter, stumbles into the party and collapses, whispering a name and a location with their dying breath.",
+        "A local festival is about to begin, but the main event, a prized pig, has mysteriously vanished. The mayor offers a handsome reward for its return, no questions asked.",
+        "An old, blind seer stops one of the party members, grips their arm, and gives them a cryptic prophecy about 'a shadow that swallows the sun' and a choice they must make.",
+        "The party overhears a hushed conversation in a tavern about a 'ghost that guards the old mill' and a treasure hidden there.",
+        "A sudden, unnatural storm rolls in, and the rain that falls is not water, but a thick, sweet-smelling syrup. The local wildlife begins acting strangely.",
+        "A wanted poster is put up with a surprisingly accurate sketch of one of the party members for a crime they didn't commit... in a town they've never visited."
+    ];
+
+    // --- Environment Data ---
+    const environmentData = {
+        weather: ["The air is thick with a heavy, unnatural fog.", "A gentle, warm rain patters down on the leaves.", "The sun beats down, baking the earth and creating shimmering heat hazes.", "Dark, angry clouds gather overhead, promising a ferocious thunderstorm.", "A cold, biting wind howls through the canyons.", "Large, fluffy snowflakes drift down, blanketing the world in a silent layer of white."],
+        timeOfDay: ["It is high noon; the sun is directly overhead, and shadows are short.", "The sun is setting, painting the sky in fiery shades of orange, pink, and purple.", "The deep twilight of dusk settles, with the first stars beginning to appear.", "It is the dead of night, with only a sliver of a moon providing any light.", "The world is bathed in the soft, gray light of pre-dawn.", "A golden morning sun rises, chasing away the last of the night's chill."],
+        ambientSound: ["The air is filled with the cacophony of a bustling market square.", "A profound, almost deafening silence blankets the area.", "The gentle rustling of leaves in the wind is the only sound.", "The air buzzes with the sound of thousands of insects.", "Distant, rhythmic chanting can be heard on the wind.", "A low, continuous hum of magical energy seems to emanate from the very ground."]
+    };
+
+    // --- Puzzle/Trap Data ---
+    const puzzleTrapData = [
+        {
+            type: "Puzzle",
+            description: "A stone door is sealed shut. Above it, an inscription reads: 'I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?'",
+            solution: "A Map. Speaking the word 'Map' aloud will open the door."
+        },
+        {
+            type: "Trap",
+            description: "A long hallway is lined with small, almost invisible holes in the walls. A pressure plate is located halfway down the hall. Stepping on it causes a volley of darts to shoot across the hall.",
+            solution: "The trap is harmless, the darts are tipped with a sticky, sweet nectar that attracts a swarm of harmless but very annoying sprites. The solution is to either avoid the pressure plate or to block the holes before triggering it."
+        },
+        {
+            type: "Puzzle",
+            description: "In the center of the room are three pedestals. On them are a silver bell, a wooden flute, and a leather drum. A riddle is carved into the floor: 'I have no voice, but I can speak. I tell of tales and of what you seek. A gentle touch is my command, played across a silent land.'",
+            solution: "The answer is 'A book' or 'A story'. The puzzle requires the players to play a simple, soft melody on the instruments in the right order to mimic a story: a soft tap on the drum (beginning), a short tune on the flute (the journey), and a clear ring of the bell (the end)."
+        },
+        {
+            type: "Puzzle",
+            description: "A chest is locked with a magical seal that shows a simple set of scales. Next to it are three stones of identical size, but one is slightly heavier. The chest will only open when the heaviest stone is placed on a small indentation on its lid.",
+            solution: "This is a classic logic puzzle. The players must use the scales to find the heaviest stone. With one weighing (comparing stone 1 and 2), they can determine if the heavy stone is one of them or the third stone."
+        },
+        {
+            type: "Trap",
+            description: "A room is filled with shimmering, illusory treasure. Anyone who tries to touch the treasure must make a Wisdom saving throw. On a failure, they become charmed by the illusion, convinced the treasure is real and unwilling to leave without it.",
+            solution: "This is a harmless psychological trap. The charm can be broken by splashing the person with water, a successful Dispel Magic, or by a companion convincing them the treasure isn't real with a successful Persuasion check."
+        }
+    ];
+
+    // ================================================================= //
+    // ======================= GENERATOR LOGIC ========================= //
+    // ================================================================= //
+
+    // --- NPC Populator ---
+    document.getElementById('generate-npc-btn').addEventListener('click', () => {
+        const name = `${getRandom(npcData.firstNames)} ${getRandom(npcData.lastNames)}`;
+        const quirk = getRandom(npcData.quirks);
+        const secret = getRandom(npcData.secrets);
+        const output = `<strong>Name:</strong> ${name}\n\n<strong>Quirk:</strong> This person ${quirk}\n\n<strong>Secret:</strong> They are secretly ${secret}`;
+        document.getElementById('npc-output').innerHTML = output;
+    });
+
+    // --- Location Generator ---
+    document.getElementById('generate-location-btn').addEventListener('click', () => {
+        const sight = getRandom(locationData.sights);
+        const sound = getRandom(locationData.sounds);
+        const smell = getRandom(locationData.smells);
+        const output = `<strong>Sight:</strong> ${sight}\n\n<strong>Sound:</strong> You hear ${sound}\n\n<strong>Smell:</strong> The air carries ${smell}`;
+        document.getElementById('location-output').innerHTML = output;
+    });
+    
+    // --- Situational Catalyst ---
+    document.getElementById('generate-catalyst-btn').addEventListener('click', () => {
+        const catalyst = getRandom(catalystData);
+        document.getElementById('catalyst-output').innerHTML = `<strong>Simple Event:</strong> ${catalyst}`;
+    });
+
+    // --- Environmental Generator ---
+    document.getElementById('generate-environment-btn').addEventListener('click', () => {
+        const weather = getRandom(environmentData.weather);
+        const time = getRandom(environmentData.timeOfDay);
+        const sound = getRandom(environmentData.ambientSound);
+        const output = `<strong>Weather:</strong> ${weather}\n\n<strong>Time of Day:</strong> ${time}\n\n<strong>Ambient Sound:</strong> ${sound}`;
+        document.getElementById('environment-output').innerHTML = output;
+    });
+
+    // --- Puzzle/Trap Creator ---
+    document.getElementById('generate-puzzle-trap-btn').addEventListener('click', () => {
+        const item = getRandom(puzzleTrapData);
+        const output = `<strong>Type:</strong> ${item.type}\n\n<strong>Description:</strong> ${item.description}\n\n<strong>Solution:</strong> ${item.solution}`;
+        document.getElementById('puzzle-trap-output').innerHTML = output;
+    });
+    
+    // ================================================================= //
+    // ==================== SPELLCRAFT SCRIBE LOGIC ==================== //
+    // ================================================================= //
+
+    const spellIdeaInput = document.getElementById('spell-idea-input');
+    const sendSpellIdeaBtn = document.getElementById('send-spell-idea');
+    const chatHistory = document.getElementById('chat-history');
+    const spellbookList = document.getElementById('spellbook-list');
+
+    let savedSpells = JSON.parse(localStorage.getItem('dndSpellbook')) || [];
+    let currentSpell = null;
+
+    // --- Render Spellbook ---
+    function renderSpellbook() {
+        spellbookList.innerHTML = '';
+        savedSpells.forEach((spell, index) => {
+            const li = document.createElement('li');
+            li.textContent = spell.name || `Spell ${index + 1}`;
+            li.onclick = () => displaySpellInChat(spell);
+            spellbookList.appendChild(li);
+        });
+    }
+
+    // --- Display Spell from Spellbook ---
+    function displaySpellInChat(spell) {
+        chatHistory.innerHTML = '';
+        const aiMessageDiv = document.createElement('div');
+        aiMessageDiv.className = 'chat-message ai-message';
+        aiMessageDiv.innerHTML = `<p>Displaying spell from your spellbook:</p><pre>${JSON.stringify(spell, null, 2)}</pre>`;
+        chatHistory.appendChild(aiMessageDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    // --- Add a message to the chat history ---
+    function addMessageToChat(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${type}-message`;
+        if (type === 'ai' && message.startsWith('{')) {
+             try {
+                const spellJson = JSON.parse(message);
+                currentSpell = spellJson; // Store the current spell
+                messageDiv.innerHTML = `<pre>${JSON.stringify(spellJson, null, 2)}</pre>`;
+                
+                const saveButton = document.createElement('button');
+                saveButton.textContent = 'Save to Spellbook';
+                saveButton.style.marginTop = '10px';
+                saveButton.onclick = () => {
+                    if (currentSpell) {
+                        savedSpells.push(currentSpell);
+                        localStorage.setItem('dndSpellbook', JSON.stringify(savedSpells));
+                        renderSpellbook();
+                        alert(`${currentSpell.name} saved!`);
+                        saveButton.remove(); // Remove button after saving
+                    }
+                };
+                messageDiv.appendChild(saveButton);
+                
+            } catch (e) {
+                messageDiv.textContent = "AI returned an invalid format.";
+            }
+        } else {
+             messageDiv.textContent = message;
+        }
+        
+        chatHistory.appendChild(messageDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+    
+    // --- API Call to Google Gemini ---
+    async function getSpellFromAI(idea) {
+        const apiKey = document.getElementById('apiKeyInput').value;
+        if (!apiKey) {
+            addMessageToChat('ERROR: Please enter your Google Gemini API Key above.', 'ai');
+            return;
+        }
+        
+        addMessageToChat('The tome glows with arcane energy...', 'ai');
+
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+        const prompt = `You are a D&D 5e rule expert. Generate a complete spell based on this idea: "${idea}".
+        Provide the output ONLY as a single, valid JSON object. Do not include any text before or after the JSON.
+        The JSON should have these keys: "name" (string), "level" (number, 0 for cantrip), "school" (string), "casting_time" (string), "range" (string), "components" (string, e.g., "V, S, M"), "duration" (string), and "description" (string, including higher-level casting effects if any).`;
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            const aiText = data.candidates[0].content.parts[0].text;
+            
+            // Clean up the AI response to ensure it's just the JSON
+            const jsonMatch = aiText.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                addMessageToChat(jsonMatch[0], 'ai');
+            } else {
+                throw new Error("AI did not return a valid JSON object.");
+            }
+            
+        } catch (error) {
+            addMessageToChat(`An error occurred: ${error.message}. Check your API key and network connection.`, 'ai');
+        }
+    }
+    
+    // --- Event Listener for sending spell idea ---
+    sendSpellIdeaBtn.addEventListener('click', () => {
+        const idea = spellIdeaInput.value.trim();
+        if (idea) {
+            addMessageToChat(idea, 'user');
+            getSpellFromAI(idea);
+            spellIdeaInput.value = '';
+        }
+    });
+    
+    spellIdeaInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendSpellIdeaBtn.click();
+        }
+    });
+    
+    // Initial render of the spellbook
+    renderSpellbook();
+
+    </script>
+</body>
+</html>
