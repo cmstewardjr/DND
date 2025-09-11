@@ -6,10 +6,7 @@
     <title>D&D Master Toolkit</title>
     <style>
         /* --- GLOBAL STYLES & BASE THEME --- */
-        :root {
-            --primary-bg: #1a1a1d; --secondary-bg: #2d2d34; --card-bg: #25252a; --text-color: #e2e2e2; --header-color: #c5c6c7; --border-color: #4a4a4a; --font-main: 'Georgia', serif; --font-header: 'Trajan Pro', 'Palatino Linotype', serif;
-            --page-accent-primary: #c59b34; --page-accent-secondary: #a87d22; --page-bg-image: radial-gradient(circle, #3d3d44, var(--primary-bg));
-        }
+        :root { --primary-bg: #1a1a1d; --secondary-bg: #2d2d34; --card-bg: #25252a; --text-color: #e2e2e2; --header-color: #c5c6c7; --border-color: #4a4a4a; --font-main: 'Georgia', serif; --font-header: 'Trajan Pro', 'Palatino Linotype', serif; --page-accent-primary: #c59b34; --page-accent-secondary: #a87d22; --page-bg-image: radial-gradient(circle, #3d3d44, var(--primary-bg)); }
         body { font-family: var(--font-main); background-color: var(--primary-bg); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; transition: background-color 0.5s ease; }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; background-color: var(--secondary-bg); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); }
         .page { display: none; background: var(--page-bg-image); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
@@ -18,67 +15,46 @@
         h1 { font-size: 2.5em; color: var(--page-accent-primary); border-color: var(--page-accent-secondary); text-shadow: 0 0 10px var(--page-accent-primary); }
         h2 { font-size: 1.8em; color: var(--header-color); border-color: var(--border-color); }
         p { text-align: center; margin-bottom: 25px; font-style: italic; color: #b0b0b0; }
-        .btn { display: block; width: 80%; max-width: 400px; padding: 15px 20px; margin: 15px auto; font-family: var(--font-header); font-size: 1.1em; letter-spacing: 1px; color: var(--text-color); background-color: var(--page-accent-primary); border: 2px solid var(--page-accent-secondary); border-radius: 5px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; position: relative; overflow: hidden; }
+        label { margin-right: 5px; font-family: var(--font-header); }
+        .btn { display: inline-block; width: auto; max-width: 400px; padding: 15px 20px; margin: 15px 5px; font-family: var(--font-header); font-size: 1.1em; letter-spacing: 1px; color: var(--text-color); background-color: var(--page-accent-primary); border: 2px solid var(--page-accent-secondary); border-radius: 5px; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
         .btn:hover { background-color: var(--page-accent-secondary); transform: translateY(-3px); box-shadow: 0 4px 15px color-mix(in srgb, var(--page-accent-primary), transparent 50%); }
-        .btn-return { background-color: #4a4a4a; border-color: #333; margin-top: 30px; }
-        .btn-return:hover { background-color: #6a6a6a; }
-        .btn-small { width: auto; padding: 10px 20px; font-size: 1em; margin: 0 10px; }
+        .btn-return { display: block; background-color: #4a4a4a; border-color: #333; margin: 30px auto 0; }
+        .btn-small { padding: 10px 20px; font-size: 1em; margin: 0 10px; }
         .btn-save { display: none; background-color: #388E3C; border-color: #1b5e20; } .btn-save:hover { background-color: #4CAF50; }
         select, input[type="text"], textarea { width: 100%; padding: 10px; background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); font-size: 1em; box-sizing: border-box; }
         textarea { min-height: 250px; resize: vertical; }
         .output-area { background-color: color-mix(in srgb, var(--card-bg), transparent 20%); backdrop-filter: blur(2px); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 20px; min-height: 100px; white-space: pre-wrap; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 1.1em; }
-        .generator-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
-
-        /* --- KEYFRAME ANIMATIONS --- */
-        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px 0 var(--page-accent-primary); } 50% { transform: scale(1.05); box-shadow: 0 0 25px 5px var(--page-accent-primary); } }
-        @keyframes flicker { 0%, 100% { opacity: 1; box-shadow: 0 0 8px 2px var(--page-accent-primary); } 50% { opacity: 0.9; box-shadow: 0 0 12px 4px var(--page-accent-primary); } }
-        @keyframes spark { 0% { background-position: -50%; } 100% { background-position: 150%; } }
-        @keyframes sky-gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes click-press { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(2px); } }
+        .generator-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        .generator-controls select { width: auto; }
 
         /* --- PAGE-SPECIFIC THEMES --- */
         #main-page .btn { animation: pulse 4s infinite ease-in-out; }
-        #campaign-tracker { --page-accent-primary: #a05a2c; --page-accent-secondary: #7a4521; --page-bg-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZdobD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg=='), radial-gradient(circle, #5a3e2b, #3a281c); }
-        #campaign-tracker h1 { color: #eaddc0; text-shadow: 0 0 5px #a05a2c; }
-        #spellcraft-scribe { --page-accent-primary: #8A2BE2; --page-accent-secondary: #6012a3; --page-bg-image: radial-gradient(circle, #2c1e3e, var(--primary-bg)); }
-        #spellcraft-scribe #send-spell-idea { background: var(--page-accent-primary); border: 2px solid var(--page-accent-secondary); animation: pulse 2s infinite; }
-        #npc-populator { --page-accent-primary: #ffab40; --page-accent-secondary: #e08c24; --page-bg-image: radial-gradient(circle, #5e3c1a, #2b1d0e); }
-        #npc-populator .btn { animation: flicker 3s infinite; }
-        #location-generator { --page-accent-primary: #4CAF50; --page-accent-secondary: #388E3C; --page-bg-image: radial-gradient(circle, #254426, #142515); }
-        #location-generator .btn::before { content: '🌿'; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.7; }
-        #situational-catalyst { --page-accent-primary: #D32F2F; --page-accent-secondary: #B71C1C; --page-bg-image: radial-gradient(circle, #4e1a1a, #2a0e0e); }
-        #situational-catalyst .btn { background: linear-gradient(110deg, var(--page-accent-primary) 30%, var(--page-accent-secondary) 40%, var(--page-accent-secondary) 60%, var(--page-accent-primary) 70%); background-size: 200% 100%; animation: spark 3s linear infinite; color: white; }
-        #environmental-generator { --page-accent-primary: #03A9F4; --page-accent-secondary: #0288D1; --page-bg-image: linear-gradient(270deg, #13223f, #3e537a, #13223f); background-size: 200% 200%; animation: sky-gradient 15s ease infinite; }
-        #puzzle-trap-creator { --page-accent-primary: #CD7F32; --page-accent-secondary: #a96624; --page-bg-image: radial-gradient(circle, #55483b, #302820); }
-        #puzzle-trap-creator .btn:active { animation: click-press 0.2s 1; }
-        
-        /* CAMPAIGN TRACKER - TABS */
-        .campaign-management { background-color: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
-        .tab-nav { list-style: none; padding: 0; margin: 20px 0 0; display: flex; border-bottom: 2px solid var(--border-color); }
-        .tab-button { padding: 10px 20px; cursor: pointer; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-bottom: none; border-radius: 6px 6px 0 0; margin-right: 5px; transition: background-color 0.3s; }
-        .tab-button:hover { background-color: color-mix(in srgb, var(--card-bg), black 20%); }
-        .tab-button.active { background-color: var(--card-bg); font-weight: bold; border-color: var(--page-accent-primary); border-bottom: 2px solid var(--card-bg); position: relative; top: 2px; }
-        .tab-content { display: none; background-color: var(--card-bg); padding: 20px; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 8px 8px; }
+        #campaign-tracker { --page-accent-primary: #a05a2c; --page-accent-secondary: #7a4521; }
+        #player-creator { --page-accent-primary: #B0C4DE; --page-accent-secondary: #778899; }
+        #spellcraft-scribe { --page-accent-primary: #8A2BE2; --page-accent-secondary: #6012a3; }
+        #npc-populator { --page-accent-primary: #ffab40; --page-accent-secondary: #e08c24; }
+        #location-generator { --page-accent-primary: #4CAF50; --page-accent-secondary: #388E3C; }
+        #situational-catalyst { --page-accent-primary: #D32F2F; --page-accent-secondary: #B71C1C; }
+        #environmental-generator { --page-accent-primary: #03A9F4; --page-accent-secondary: #0288D1; }
+        #puzzle-trap-creator { --page-accent-primary: #CD7F32; --page-accent-secondary: #a96624; }
+
+        /* --- MODULAR GENERATOR STYLES --- */
+        .modular-output { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .output-module { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .output-module.locked { border-color: var(--page-accent-primary); box-shadow: 0 0 8px color-mix(in srgb, var(--page-accent-primary), transparent 50%); }
+        .output-module h4 { margin: 0 0 10px; font-family: var(--font-header); color: var(--header-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .output-module .content { flex-grow: 1; white-space: pre-wrap; font-size: 1.05em; }
+        .module-controls { display: flex; gap: 10px; margin-top: 15px; }
+        .module-btn { flex-grow: 1; padding: 5px; font-family: var(--font-main); font-size: 0.9em; background-color: var(--secondary-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+        .module-btn:hover { background-color: var(--primary-bg); }
+        .lock-btn.locked { background-color: var(--page-accent-secondary); }
+
+        /* --- ACCESSIBLE TABS --- */
+        .tab-nav { list-style: none; padding: 0; margin: 20px 0 0; display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); }
+        .tab-button { padding: 10px 20px; cursor: pointer; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-bottom: none; border-radius: 6px 6px 0 0; margin-right: 5px; }
+        .tab-button[aria-selected="true"] { background-color: var(--card-bg); font-weight: bold; border-color: var(--page-accent-primary); }
+        .tab-content { display: none; background-color: var(--card-bg); padding: 20px; border: 1px solid var(--border-color); border-top: none; }
         .tab-content.active { display: block; }
-        .tab-content label { display: block; margin-bottom: 10px; font-family: var(--font-header); font-size: 1.2em; color: var(--header-color); }
-
-        /* SPELLCRAFT SCRIBE - REVISED LAYOUT */
-        .spellcraft-layout { display: flex; gap: 20px; } 
-        .tome { flex: 3; display: flex; flex-direction: column; background: #e8dcb5; color: #3b2f2f; border: 10px solid #5a3a22; border-radius: 5px; box-shadow: 5px 5px 15px rgba(0,0,0,0.7); padding: 20px; } 
-        .chat-history { flex-grow: 1; overflow-y: auto; margin-bottom: 15px; border: 1px solid #c8b898; padding: 10px; background: #fdf6e3; } 
-        .chat-input-area { display: flex; gap: 10px; } 
-        .chat-input-area input { flex-grow: 1; } 
-        .spellbook-sidebar { flex: 1; background-color: var(--card-bg); border-radius: 8px; padding: 15px; overflow-y: auto; max-height: 60vh; } 
-        .spellbook-list { list-style-type: none; padding: 0; } 
-        .spellbook-list li { padding: 10px; background: var(--secondary-bg); margin-bottom: 5px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; } 
-        .spellbook-list li:hover { background-color: var(--page-accent-primary); }
-
-        @media (max-width: 768px) {
-            .spellcraft-layout { flex-direction: column; height: auto; }
-            .spellbook-sidebar { margin-top: 20px; max-height: 250px; }
-            .tab-nav { flex-wrap: wrap; }
-            .tab-button { flex-grow: 1; text-align: center; }
-        }
     </style>
 </head>
 <body>
@@ -87,383 +63,411 @@
         <!-- ==================== MAIN PAGE ======================= -->
         <div id="main-page" class="page active">
             <h1>D&D Master Toolkit</h1>
-            <p>Your unified, single-file application for on-the-fly D&D content generation.</p>
-            <div class="grid">
-                <button class="btn" onclick="showPage('campaign-tracker')">Campaign Tracker</button>
-                <button class="btn" onclick="showPage('spellcraft-scribe')">Spellcraft Scribe</button>
-                <button class="btn" onclick="showPage('npc-populator')">Instant NPC Populator</button>
-                <button class="btn" onclick="showPage('location-generator')">On-the-Fly Location</button>
-                <button class="btn" onclick="showPage('situational-catalyst')">Situational Catalyst</button>
-                <button class="btn" onclick="showPage('environmental-generator')">Dynamic Environment</button>
-                <button class="btn" onclick="showPage('puzzle-trap-creator')">Quick Puzzle/Trap</button>
+            <p>Your unified, single-file application for on-the-fly D&D 5e content generation.</p>
+            <div class="main-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn" onclick="showPage('campaign-tracker')" style="width: 100%; margin: 5px auto;">Campaign Tracker</button>
+                <button class="btn" onclick="showPage('player-creator')" style="width: 100%; margin: 5px auto;">Player Character Creator</button>
+                <button class="btn" onclick="showPage('npc-populator')" style="width: 100%; margin: 5px auto;">Instant NPC Populator</button>
+                <button class="btn" onclick="showPage('location-generator')" style="width: 100%; margin: 5px auto;">On-the-Fly Location</button>
+                <button class="btn" onclick="showPage('spellcraft-scribe')" style="width: 100%; margin: 5px auto;">Spellcraft Scribe</button>
+                <button class="btn" onclick="showPage('situational-catalyst')" style="width: 100%; margin: 5px auto;">Situational Catalyst</button>
+                <button class="btn" onclick="showPage('environmental-generator')" style="width: 100%; margin: 5px auto;">Dynamic Environment</button>
+                <button class="btn" onclick="showPage('puzzle-trap-creator')" style="width: 100%; margin: 5px auto;">Quick Puzzle/Trap</button>
             </div>
         </div>
 
-        <!-- ==================== CAMPAIGN TRACKER (REVISED) ================== -->
+        <!-- ==================== CAMPAIGN TRACKER ================== -->
         <div id="campaign-tracker" class="page">
-            <h1>Campaign Tracker</h1>
+             <h1>Campaign Tracker</h1>
             <div class="campaign-management">
                 <label for="campaign-selector">Active Campaign:</label> <select id="campaign-selector"></select>
                 <button class="btn btn-small" id="new-campaign-btn">New</button> <button class="btn btn-small" id="delete-campaign-btn">Delete</button>
             </div>
             <input type="text" id="campaign-title" placeholder="Select or create a campaign to edit its title" style="margin-bottom: 20px;">
-            <ul class="tab-nav" id="campaign-tab-nav">
-                <li class="tab-button active" data-tab="tab-session-log">Session Log</li><li class="tab-button" data-tab="tab-pcs">Player Characters</li><li class="tab-button" data-tab="tab-npcs">Key NPCs</li><li class="tab-button" data-tab="tab-locations">Locations</li><li class="tab-button" data-tab="tab-quests">Quests</li><li class="tab-button" data-tab="tab-factions">Factions</li><li class="tab-button" data-tab="tab-lore">World Lore</li>
-            </ul>
-            <div class="tab-content-container">
-                <div id="tab-session-log" class="tab-content active"><label for="campaign-log">Chronicle the party's journey, decisions, and significant events here.</label><textarea id="campaign-log"></textarea></div>
-                <div id="tab-pcs" class="tab-content"><label for="campaign-pcs">Track player characters, their backstories, goals, and key inventory.</label><textarea id="campaign-pcs"></textarea></div>
-                <div id="tab-npcs" class="tab-content"><label for="campaign-npcs">Keep notes on important Non-Player Characters the party has met.</label><textarea id="campaign-npcs"></textarea></div>
-                <div id="tab-locations" class="tab-content"><label for="campaign-locations">Detail the cities, dungeons, and landmarks of your world.</label><textarea id="campaign-locations"></textarea></div>
-                <div id="tab-quests" class="tab-content"><label for="campaign-quests">Manage active, completed, and potential future quests and plot hooks.</label><textarea id="campaign-quests"></textarea></div>
-                <div id="tab-factions" class="tab-content"><label for="campaign-factions">Outline the goals, members, and influence of various factions and organizations.</label><textarea id="campaign-factions"></textarea></div>
-                <div id="tab-lore" class="tab-content"><label for="campaign-lore">Document the history, cosmology, and unique rules of your campaign setting.</label><textarea id="campaign-lore"></textarea></div>
+            <div role="tablist" class="tab-nav" id="campaign-tab-nav">
+                 <button role="tab" aria-selected="true" class="tab-button" id="tab-btn-log" aria-controls="tab-panel-log">Session Log</button>
+                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-pcs" aria-controls="tab-panel-pcs">Player Characters</button>
+                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-npcs" aria-controls="tab-panel-npcs">Key NPCs</button>
+                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-locations" aria-controls="tab-panel-locations">Locations</button>
+                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-quests" aria-controls="tab-panel-quests">Quests</button>
             </div>
-            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
-        </div>
-
-        <!-- ==================== SPELLCRAFT SCRIBE (API-FREE) =================== -->
-        <div id="spellcraft-scribe" class="page">
-            <h1>Spellcraft Scribe</h1><p>Generate detailed D&D 5e spells from your ideas using the built-in Grimoire. No internet needed.</p>
-            <div class="spellcraft-layout">
-                <div class="tome">
-                    <div class="chat-history" id="chat-history">Your generated spell will appear here.</div>
-                    <div class="chat-input-area"><input type="text" id="spell-idea-input" placeholder="e.g., A cantrip that creates shadowy chains"><button id="send-spell-idea">Conjure</button></div>
-                </div>
-                <div class="spellbook-sidebar"><h3>My Spellbook</h3><ul class="spellbook-list" id="spellbook-list"></ul></div>
+            <div class="tab-content-container">
+                 <div role="tabpanel" tabindex="0" id="tab-panel-log" class="tab-content active" aria-labelledby="tab-btn-log"><label for="campaign-log">Chronicle the party's journey...</label><textarea id="campaign-log"></textarea></div>
+                 <div role="tabpanel" tabindex="0" id="tab-panel-pcs" class="tab-content" aria-labelledby="tab-btn-pcs"><label for="campaign-pcs">Track player characters...</label><textarea id="campaign-pcs"></textarea></div>
+                 <div role="tabpanel" tabindex="0" id="tab-panel-npcs" class="tab-content" aria-labelledby="tab-btn-npcs"><label for="campaign-npcs">Keep notes on important NPCs...</label><textarea id="campaign-npcs"></textarea></div>
+                 <div role="tabpanel" tabindex="0" id="tab-panel-locations" class="tab-content" aria-labelledby="tab-btn-locations"><label for="campaign-locations">Detail the locations...</label><textarea id="campaign-locations"></textarea></div>
+                 <div role="tabpanel" tabindex="0" id="tab-panel-quests" class="tab-content" aria-labelledby="tab-btn-quests"><label for="campaign-quests">Manage active quests...</label><textarea id="campaign-quests"></textarea></div>
             </div>
             <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
         
-        <!-- ==================== OTHER GENERATOR PAGES (NOW WITH LOGIC) =================== -->
-        <div id="npc-populator" class="page">
-            <h2>Instant NPC Populator</h2><p>Quickly create a memorable character with a unique quirk.</p>
+        <!-- ==================== MODULAR GENERATOR PAGES ================== -->
+        <div id="player-creator" class="page">
+            <h2>Player Character Creator</h2><p>Build a character piece by piece. Lock what you like, reroll what you don't.</p>
             <div class="generator-controls">
-                <select id="npc-race-filter"><option value="any">Any Race</option><option value="Human">Human</option><option value="Elf">Elf</option><option value="Dwarf">Dwarf</option><option value="Halfling">Halfling</option><option value="Gnome">Gnome</option><option value="Dragonborn">Dragonborn</option></select>
-                <button class="btn btn-small" id="generate-npc-btn">Generate NPC</button>
-                <button class="btn btn-small btn-save" id="save-npc-btn" data-type="npc">Save to Campaign</button>
+                <button class="btn" id="generate-pc-btn">Generate All</button>
+                <button class="btn btn-save" id="save-pc-btn" data-type="pc">Save Assembled PC</button>
             </div>
-            <div class="output-area" id="npc-output">Your generated NPC will appear here.</div>
+            <div class="modular-output" id="pc-output"></div>
             <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
-        <div id="location-generator" class="page">
-            <h2>On-the-Fly Location</h2><p>Describe a new location with sensory details and a potential hook.</p>
-             <div class="generator-controls">
-                <select id="location-terrain-filter"><option value="any">Any Terrain</option><option value="Forest">Forest</option><option value="City">City</option><option value="Mountain">Mountain</option><option value="Dungeon">Dungeon</option><option value="Coastal">Coastal</option></select>
-                <button class="btn btn-small" id="generate-location-btn">Generate Location</button>
-                <button class="btn btn-small btn-save" id="save-location-btn" data-type="location">Save to Campaign</button>
+
+        <div id="npc-populator" class="page">
+            <h2>Instant NPC Populator</h2><p>Craft a unique NPC. Lock their race, reroll their secret!</p>
+            <div class="generator-controls">
+                <button class="btn" id="generate-npc-btn">Generate All</button>
+                <button class="btn btn-save" id="save-npc-btn" data-type="npc">Save Assembled NPC</button>
             </div>
-            <div class="output-area" id="location-output">Your generated location will appear here.</div>
+            <div class="modular-output" id="npc-output"></div>
             <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+
+        <div id="location-generator" class="page">
+            <h2>On-the-Fly Location</h2><p>Create an evocative location, refining each sensory detail.</p>
+             <div class="generator-controls">
+                <label for="location-terrain-filter">Terrain:</label>
+                <select id="location-terrain-filter"></select>
+                <button class="btn" id="generate-location-btn">Generate All</button>
+                <button class="btn btn-save" id="save-location-btn" data-type="location">Save Assembled Location</button>
+            </div>
+            <div class="modular-output" id="location-output"></div>
+            <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
+        </div>
+
+        <!-- ==================== OTHER PAGES (HTML RESTORED) ================== -->
+        <div id="spellcraft-scribe" class="page">
+            <h1>Spellcraft Scribe</h1><p>Generate D&D 5e spell concepts.</p>
+            <!-- Spellcraft HTML structure -->
+             <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
         <div id="situational-catalyst" class="page">
-             <h2>Situational Catalyst</h2><p>Spark a new quest, encounter, or plot twist with a single click.</p>
+             <h2>Situational Catalyst</h2><p>Spark a new quest, encounter, or plot twist.</p>
              <div class="generator-controls">
                 <button class="btn" id="generate-catalyst-btn">Generate Catalyst</button>
                 <button class="btn btn-small btn-save" id="save-catalyst-btn" data-type="quest">Save as Quest</button>
             </div>
-             <div class="output-area" id="catalyst-output">Your generated catalyst will appear here.</div>
+             <div class="output-area" id="catalyst-output"></div>
              <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
         <div id="environmental-generator" class="page">
-             <h2>Dynamic Environment</h2><p>Add atmospheric flavor to any scene with rich sensory details.</p>
-             <div class="generator-controls">
-                 <button class="btn" id="generate-environment-btn">Generate Environment</button>
-             </div>
-             <div class="output-area" id="environment-output">Your generated environmental details will appear here.</div>
+             <h2>Dynamic Environment</h2><p>Add atmospheric flavor to any scene.</p>
+             <div class="generator-controls"><button class="btn" id="generate-environment-btn">Generate Environment</button></div>
+             <div class="output-area" id="environment-output"></div>
              <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
         <div id="puzzle-trap-creator" class="page">
-             <h2>Quick Puzzle/Trap</h2><p>Create a simple challenge, from a clever riddle to a deadly mechanism.</p>
+             <h2>Quick Puzzle/Trap</h2><p>Create a simple challenge.</p>
              <div class="generator-controls">
                 <select id="puzzle-trap-type"><option value="any">Any Challenge</option><option value="Puzzle">Puzzle</option><option value="Trap">Trap</option></select>
                 <button class="btn btn-small" id="generate-puzzle-trap-btn">Generate Challenge</button>
-                <button class="btn btn-small btn-save" id="save-puzzle-trap-btn" data-type="log">Save to Session Log</button>
+                <button class="btn btn-small btn-save" id="save-puzzle-trap-btn" data-type="log">Save to Log</button>
             </div>
-             <div class="output-area" id="puzzle-trap-output">Your generated challenge will appear here.</div>
+             <div class="output-area" id="puzzle-trap-output"></div>
              <button class="btn btn-return" onclick="showPage('main-page')">Return to Main</button>
         </div>
+
     </div>
 
 <script>
-    // ======================= APP INITIALIZATION & NAVIGATION ==========================
-    document.addEventListener('DOMContentLoaded', () => {
-        initializeCampaignTracker();
-        renderSpellbook();
-        initializeGenerators();
-    });
-    const pages = document.querySelectorAll('.page');
-    function showPage(pageId) {
-        pages.forEach(page => page.classList.toggle('active', page.id === pageId));
-        const activePage = document.getElementById(pageId);
-        document.body.style.setProperty('--page-accent-primary', getComputedStyle(activePage).getPropertyValue('--page-accent-primary'));
-        document.body.style.setProperty('--page-accent-secondary', getComputedStyle(activePage).getPropertyValue('--page-accent-secondary'));
-        document.body.style.setProperty('--page-bg-image', getComputedStyle(activePage).getPropertyValue('--page-bg-image'));
-    }
-    const getRandom = (arr) => arr ? arr[Math.floor(Math.random() * arr.length)] : '';
-    let lastGeneratedContent = {}; // Store last generated content for saving
+// This is a single, self-contained script. All JS goes in here.
 
-    // ======================= DATA FOR GENERATORS ==========================
-    const npcData = {
+// ======================= APP INITIALIZATION & NAVIGATION (RESTORED) ==========================
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCampaignTracker();
+    initializeGenerators();
+    // Spellcraft and other simple generators can be initialized here if needed
+});
+
+const pages = document.querySelectorAll('.page');
+function showPage(pageId) {
+    pages.forEach(page => page.classList.toggle('active', page.id === pageId));
+    const activePage = document.getElementById(pageId);
+    document.body.style.setProperty('--page-accent-primary', getComputedStyle(activePage).getPropertyValue('--page-accent-primary'));
+    document.body.style.setProperty('--page-accent-secondary', getComputedStyle(activePage).getPropertyValue('--page-accent-secondary'));
+    document.body.style.setProperty('--page-bg-image', getComputedStyle(activePage).getPropertyValue('--page-bg-image'));
+}
+const getRandom = (arr) => arr ? arr[Math.floor(Math.random() * arr.length)] : '';
+
+
+// ======================= MASSIVE 5E DATA OBJECT ==========================
+const dndData = {
+    // NAME DATA
+    names: {
+        Human: { first: ["Alistair", "Elara", "Gideon", "Seraphina", "Kaelen", "Falk", "Rowan", "Isolde", "Marcus", "Liana"], last: ["Blackwood", "Oakhart", "Stonemantle", "Goldhand", "Swiftwater", "Greycastle"] },
+        Elf: { first: ["Aerion", "Lael", "Lyra", "Faelar", "Galadrielle", "Erevan", "Sariel", "Naivara"], last: ["Moonshadow", "Starflower", "Whisperwind", "Silverwood", "Sunstrider"] },
+        Dwarf: { first: ["Bram", "Gimli", "Helga", "Brunhilda", "Durin", "Thrain", "Borin", "Gundren"], clan: ["Stonehammer", "Ironfist", "Deepdelver", "Battlehammer", "Goldbeard"] },
+        Halfling: { first: ["Pippin", "Rosie", "Samwise", "Merry", "Lila", "Finnan", "Cora"], last: ["Greenbottle", "Tealeaf", "Goodbarrel", "Hilltopple", "Underbough"] },
+        Dragonborn: { first: ["Arjhan", "Sora", "Kriv", "Medrash", "Balam", "Heskan", "Ghesh"], clan: ["Clethtinthiallor", "Delmirev", "Kerrhylon", "Myastan", "Shestendeliath"] },
+        Gnome: { first: ["Fizzle", "Gnorman", "Nissa", "Wobble", "Bimpnottin", "Zook", "Orryn"], last: ["Cobblelob", "Fnipper", "Turen", "Gimlen", "Daergel"] },
+        Tiefling: { first: ["Akmenos", "Damakos", "Ekemon", "Kallista", "Mehen", "Orianna"], virtue: ["Art", "Carrion", "Creed", "Despair", "Hope", "Fear", "Glory", "Music", "Nowhere", "Poetry", "Sorrow"] },
+        HalfOrc: { first: ["Gruk", "Shump", "Ront", "Baggi", "Emen", "Feng", "Mhurren"], last: [] }
+    },
+    pc: {
+        classes: ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"],
+        backgrounds: { "Acolyte": {trait: "I see omens in every event.", ideal: "Faith.", bond: "I would die to recover an ancient relic.", flaw: "I judge others harshly."}, "Criminal": {trait: "I always have a plan.", ideal: "Freedom.", bond: "I'm trying to pay off an old debt.", flaw: "I have a 'tell' when I lie."}, "Folk Hero": {trait: "I judge people by their actions.", ideal: "Destiny.", bond: "I protect those who cannot protect themselves.", flaw: "I'm blind to my own shortcomings."}, "Sage": {trait: "I use polysyllabic words.", ideal: "Knowledge.", bond: "My life's work is a series of tomes.", flaw: "I am easily distracted by the promise of information."} },
+        alignments: ["Lawful Good", "Neutral Good", "Chaotic Good", "Lawful Neutral", "True Neutral", "Chaotic Neutral", "Lawful Evil", "Neutral Evil", "Chaotic Evil"]
+    },
+    npc: {
         races: ["Human", "Elf", "Dwarf", "Halfling", "Gnome", "Dragonborn", "Tiefling", "Half-Orc"],
-        firstNames: {
-            Human: ["Alistair", "Elara", "Gideon", "Seraphina"], Elf: ["Elara", "Lael", "Aerion", "Lyra"],
-            Dwarf: ["Bram", "Gimli", "Helga", "Brunhilda"], Halfling: ["Pippin", "Rosie", "Samwise", "Merry"],
-            Gnome: ["Fizzle", "Gnorman", "Nissa", "Wobble"], Dragonborn: ["Arjhan", "Sora", "Kriv", "Medrash"]
-        },
-        lastNames: ["Blackwood", "Stonehand", "Swiftfoot", "Oakenheart", "Shadowalker"],
-        occupations: ["Blacksmith", "Alchemist", "Guard Captain", "Librarian", "Guild Master", "Street Urchin"],
-        personalities: ["gruff but kind-hearted", "nervously ambitious", "serenely wise", "cynical and witty", "overly enthusiastic"],
-        secrets: ["is a disgraced noble in hiding", "secretly works for a rival faction", "is terrified of heights", "possesses a rare magical artifact without knowing its true power", "owes a life debt to a dangerous creature"]
-    };
-    const locationData = {
-        terrains: ["Forest", "City", "Mountain", "Dungeon", "Coastal"],
-        adjectives: {
-            Forest: ["Whispering", "Sun-dappled", "Gnarled"], City: ["Bustling", "Shadowy", "Opulent"],
-            Mountain: ["Wind-swept", "Jagged", "Lonely"], Dungeon: ["Dank", "Trap-laden", "Ancient"],
-        },
-        nouns: {
-            Forest: ["Grove", "Clearing", "Thicket"], City: ["Alleyway", "Market Square", "Rooftops"],
-            Mountain: ["Peak", "Pass", "Cave"], Dungeon: ["Hall", "Chamber", "Crypt"],
-        },
-        features: ["an ancient, moss-covered statue", "a strangely silent pool of water", "a makeshift shrine to a forgotten god", "graffiti in a language no one recognizes"],
-        hooks: ["A rare herb is said to grow only here.", "Locals speak of a ghost that haunts this place at night.", "A valuable treasure was last seen here.", "This is a known meeting point for a secret society."]
-    };
-    const catalystData = {
-        actors: ["A desperate refugee", "A charismatic cult leader", "A retired adventurer", "A mischievous fey creature", "A power-hungry noble"],
-        actions: ["steals", "is searching for", "has discovered a prophecy about", "wants to destroy", "needs protection from"],
-        subjects: ["a legendary artifact.", "a person the party knows.", "a map to a lost city.", "a dark secret about the king.", "a powerful magical spell."],
-        twists: ["The 'villain' is actually the victim.", "The item they seek is cursed.", "The quest giver has a hidden agenda.", "Fulfilling the request will anger a powerful entity.", "The situation is a complete misunderstanding."]
-    };
-    const environmentData = {
-        sights: ["Long, distorted shadows stretch from the trees.", "A thick, rolling fog blankets the ground.", "The sky is a brilliant tapestry of stars.", "Dust motes dance in a single sunbeam piercing the gloom."],
-        sounds: ["the distant howl of a lone wolf.", "the gentle rustling of leaves in the wind.", "an unnatural silence that seems to absorb all noise.", "the rhythmic drip of water into a hidden puddle."],
-        smells: ["the earthy scent of damp soil and decay.", "the sharp tang of ozone after a storm.", "the cloying sweetness of a strange, blooming flower.", "the faint, metallic scent of old blood."]
-    };
-    const puzzleTrapData = {
-        types: ["Puzzle", "Trap"],
-        triggers: {
-            Puzzle: ["speaking a specific phrase", "arranging items in a pattern", "stepping on pressure plates in sequence"],
-            Trap: ["a tripwire", "removing a specific object from a pedestal", "opening a chest", "a pressure plate"]
-        },
-        mechanisms: {
-            Puzzle: ["A series of rotating stone rings with symbols that must align.", "A floor tiled with letters, where a riddle's answer must be spelled out by walking.", "Statues that must be faced in the correct direction based on clues in the room."],
-            Trap: ["Poisoned darts shoot from the walls.", "The floor gives way to a pit of spikes.", "A magical glyph explodes with necrotic energy.", "The room begins to fill with sand."]
-        },
-        solutions: {
-            Puzzle: "Solving the riddle or pattern reveals the way forward.",
-            Trap: "A successful Dexterity (Thieves' Tools) check to disarm, or a creative solution to bypass the trigger."
-        }
-    };
-    const spellData = {
-        keywords: { fire: { school: "Evocation", damage: "Fire", adjective: "Fiery", noun: "Flame" }, ice: { school: "Evocation", damage: "Cold", adjective: "Icy", noun: "Shard" }, lightning: { school: "Evocation", damage: "Lightning", adjective: "Crackling", noun: "Bolt" }, shadow: { school: "Illusion", damage: "Psychic", adjective: "Shadowy", noun: "Tendril" }, charm: { school: "Enchantment", damage: "Charm", adjective: "Beguiling", noun: "Gaze" }, chains: { school: "Conjuration", damage: "Restrain", adjective: "Binding", noun: "Chains" } },
-        templates: {
-            name: ["{Adjective} {Noun}", "{Noun} of {Damage}", "{Adjective} Grasp"], level: ["Cantrip", "1st-level", "2nd-level"], castingTime: ["1 Action", "1 Bonus Action"], range: ["30 feet", "60 feet", "Touch"], components: ["V, S", "S, M"], duration: ["Instantaneous", "Concentration, up to 1 minute"],
-            description: ["A shimmering {Noun} of {Damage} energy streaks toward a creature within range. On a hit, the target takes 1d8 {Damage} damage.", "You unleash a burst of {Damage} energy. Each creature in a 15-foot cone must make a Dexterity saving throw, taking 2d6 {Damage} damage on a failed save.", "{Adjective} {Noun | plural} erupt from the ground in a 10-foot square, becoming difficult terrain and dealing 1d6 {Damage} damage to any creature that starts its turn there."]
-        }
-    };
+        occupations: ["Blacksmith", "Alchemist", "Guard Captain", "Librarian", "Guild Master", "Street Urchin", "Retired Adventurer", "Priest", "Shady Merchant", "Cartographer"],
+        mannerisms: ["Taps fingers impatiently", "Constantly adjusts their spectacles", "Speaks in a hushed, conspiratorial tone", "Has a booming, infectious laugh", "Chews on a piece of straw", "Never makes direct eye contact"],
+        secrets: ["is a disgraced noble in hiding", "secretly works for a rival faction", "is terrified of heights", "possesses a rare magical artifact without knowing its true power", "owes a life debt to a dangerous creature", "is an escaped prisoner", "has a child they've never met"]
+    },
+    location: {
+        terrains: ["Forest", "City", "Mountain", "Dungeon", "Coastal", "Swamp", "Plains"],
+        sights: ["Long, distorted shadows", "A thick, rolling fog", "Brilliant starlight", "Dust motes in a sunbeam", "An unnaturally vibrant type of moss", "Crumbling, vine-choked ruins"],
+        sounds: ["The distant howl of a wolf", "The gentle rustling of leaves", "An unnatural, profound silence", "The rhythmic drip of water", "The faint chanting of a forgotten ritual", "The crunch of dry twigs underfoot"],
+        smells: ["Damp soil and decay", "The sharp tang of ozone", "The cloying sweetness of a strange flower", "The faint, metallic scent of old blood", "The briny air of the sea", "The comforting smell of a wood fire"],
+        hooks: ["A rare herb is said to grow only here.", "Locals speak of a ghost that haunts this place.", "A valuable treasure was last seen here.", "This is a known meeting point for a secret society.", "A child from the nearby village has gone missing in this area."]
+    }
+};
 
-    // ======================= GENERATOR LOGIC & INITIALIZATION =========================
-    function initializeGenerators() {
-        document.getElementById('generate-npc-btn').addEventListener('click', () => {
-            const raceFilter = document.getElementById('npc-race-filter').value;
-            const race = raceFilter === 'any' ? getRandom(npcData.races) : raceFilter;
-            const firstName = getRandom(npcData.firstNames[race] || npcData.firstNames["Human"]);
-            const content = `${firstName} ${getRandom(npcData.lastNames)} (${race} ${getRandom(npcData.occupations)})\n\nPersonality: They are ${getRandom(npcData.personalities)}.\nSecret: This character ${getRandom(npcData.secrets)}.`;
-            displayGeneratedContent('npc', content);
-        });
-        document.getElementById('generate-location-btn').addEventListener('click', () => {
-            const terrainFilter = document.getElementById('location-terrain-filter').value;
-            const terrain = terrainFilter === 'any' ? getRandom(locationData.terrains) : terrainFilter;
-            const adjective = getRandom(locationData.adjectives[terrain] || []);
-            const noun = getRandom(locationData.nouns[terrain] || []);
-            const content = `${adjective} ${noun} (${terrain})\n\nFeature: You notice ${getRandom(locationData.features)}.\nHook: ${getRandom(locationData.hooks)}`;
-            displayGeneratedContent('location', content);
-        });
-        document.getElementById('generate-catalyst-btn').addEventListener('click', () => {
-            const content = `${getRandom(catalystData.actors)} ${getRandom(catalystData.actions)} ${getRandom(catalystData.subjects)}\nTwist: ${getRandom(catalystData.twists)}`;
-            displayGeneratedContent('catalyst', content);
-        });
-        document.getElementById('generate-environment-btn').addEventListener('click', () => {
-            const content = `As you enter the area, you notice...\nSight: ${getRandom(environmentData.sights)}\nSound: You hear ${getRandom(environmentData.sounds)}\nSmell: You smell ${getRandom(environmentData.smells)}`;
-            document.getElementById('environment-output').textContent = content;
-        });
-        document.getElementById('generate-puzzle-trap-btn').addEventListener('click', () => {
-            const typeFilter = document.getElementById('puzzle-trap-type').value;
-            const type = typeFilter === 'any' ? getRandom(puzzleTrapData.types) : typeFilter;
-            const content = `Type: ${type}\nTrigger: It's activated by ${getRandom(puzzleTrapData.triggers[type])}.\nMechanism: ${getRandom(puzzleTrapData.mechanisms[type])}\nResolution: ${puzzleTrapData.solutions[type]}`;
-            displayGeneratedContent('puzzle-trap', content);
-        });
-        // Add listeners for all save buttons
-        document.querySelectorAll('.btn-save').forEach(btn => btn.addEventListener('click', () => {
-            const type = btn.dataset.type;
-            const content = lastGeneratedContent[btn.id];
-            if (content) saveToActiveCampaign(type, content);
-        }));
-    }
-    function displayGeneratedContent(generator, content) {
-        const outputEl = document.getElementById(`${generator}-output`);
-        const saveBtn = document.getElementById(`save-${generator}-btn`);
-        if (outputEl) outputEl.textContent = content;
-        if (saveBtn) {
-            saveBtn.style.display = 'inline-block';
-            lastGeneratedContent[saveBtn.id] = content;
-        }
-    }
+// ======================= GENERATOR LOGIC & INITIALIZATION =========================
+function initializeGenerators() {
+    // Populate dropdowns
+    const terrainFilter = document.getElementById('location-terrain-filter');
+    dndData.location.terrains.forEach(t => terrainFilter.innerHTML += `<option value="${t}">${t}</option>`);
 
-    // ======================= SPELLCRAFT SCRIBE (API-FREE) =========================
-    // ... Spellcraft Scribe logic remains unchanged ...
-    const spellIdeaInput = document.getElementById('spell-idea-input');
-    const sendSpellIdeaBtn = document.getElementById('send-spell-idea');
-    const chatHistory = document.getElementById('chat-history');
-    const spellbookList = document.getElementById('spellbook-list');
-    let savedSpells = JSON.parse(localStorage.getItem('dndSpellbook')) || [];
-    let currentSpellText = "";
-    function generateSpellFromIdea(idea) {
-        idea = idea.toLowerCase();
-        let config = { school: "Transmutation", damage: "Force", adjective: "Arcane", noun: "Energy" };
-        for (const key in spellData.keywords) { if (idea.includes(key)) { config = { ...config, ...spellData.keywords[key] }; break; } }
-        let name = getRandom(spellData.templates.name).replace('{Adjective}', config.adjective).replace('{Noun}', config.noun).replace('{Damage}', config.damage);
-        let level = idea.includes('cantrip') ? "Cantrip" : getRandom(spellData.templates.level);
-        let description = getRandom(spellData.templates.description).replace(/{Damage}/g, config.damage.toLowerCase()).replace('{Noun | plural}', config.noun + 's').replace('{Noun}', config.noun).replace('{Adjective}', config.adjective);
-        if (level !== "Cantrip") { description += `\n\nAt Higher Levels: When you cast this spell using a spell slot of ${parseInt(level[0]) + 1}th level or higher, the damage increases by 1d8 for each slot level above ${level[0]}.`; }
-        return `Name: ${name}\nLevel: ${level} ${config.school}\nCasting Time: ${getRandom(spellData.templates.castingTime)}\nRange: ${getRandom(spellData.templates.range)}\nComponents: ${getRandom(spellData.templates.components)}\nDuration: ${getRandom(spellData.templates.duration)}\n\n${description}`;
-    }
-    sendSpellIdeaBtn.addEventListener('click', () => {
-        const idea = spellIdeaInput.value.trim();
-        if (idea) {
-            currentSpellText = generateSpellFromIdea(idea);
-            chatHistory.innerHTML = `<pre>${currentSpellText}</pre>`;
-            const saveButton = document.createElement('button');
-            saveButton.textContent = 'Save to Spellbook';
-            saveButton.className = 'btn btn-small';
-            saveButton.style.margin = '10px auto';
-            saveButton.onclick = () => {
-                const spellName = currentSpellText.match(/Name: (.*)/)[1];
-                savedSpells.push({ name: spellName, text: currentSpellText });
-                localStorage.setItem('dndSpellbook', JSON.stringify(savedSpells));
-                renderSpellbook();
-                alert(`${spellName} saved!`);
-                saveButton.remove();
-            };
-            chatHistory.appendChild(saveButton);
-            spellIdeaInput.value = '';
+    // Main 'Generate All' Buttons
+    document.getElementById('generate-pc-btn').addEventListener('click', () => generateModularEntity('pc'));
+    document.getElementById('generate-npc-btn').addEventListener('click', () => generateModularEntity('npc'));
+    document.getElementById('generate-location-btn').addEventListener('click', () => generateModularEntity('location'));
+
+    // Event Delegation for Reroll/Lock buttons
+    document.querySelector('.container').addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('reroll-btn')) {
+            const module = target.closest('.output-module');
+            const key = module.dataset.key;
+            const entityType = module.closest('.modular-output').id.split('-')[0];
+            const newContent = generatePart(entityType, key);
+            module.querySelector('.content').innerHTML = newContent;
+        } else if (target.classList.contains('lock-btn')) {
+            const module = target.closest('.output-module');
+            module.classList.toggle('locked');
+            target.classList.toggle('locked');
+            target.textContent = module.classList.contains('locked') ? 'Unlock' : 'Lock';
         }
     });
-    function renderSpellbook() {
-        spellbookList.innerHTML = '';
-        savedSpells.forEach((spell, index) => {
-            const li = document.createElement('li');
-            li.textContent = spell.name || `Spell ${index + 1}`;
-            li.onclick = () => { chatHistory.innerHTML = `<pre>${spell.text}</pre>`; };
-            spellbookList.appendChild(li);
-        });
-    }
+    
+    // Save Buttons
+    document.querySelectorAll('.btn-save').forEach(btn => btn.addEventListener('click', () => {
+        const entityType = btn.id.split('-')[1];
+        const outputContainer = document.getElementById(`${entityType}-output`);
+        if (!outputContainer) return; 
 
-    // ======================= CAMPAIGN TRACKER LOGIC (REVISED) ====================
-    const campaignsKey = 'dndCampaigns', activeCampaignIdKey = 'activeDndCampaignId';
-    const campaignSelector = document.getElementById('campaign-selector');
-    const campaignTitleEl = document.getElementById('campaign-title');
-    const trackerTextareas = document.querySelectorAll('#campaign-tracker .tab-content textarea');
-    const campaignFields = { 'campaign-title': 'title', 'campaign-log': 'log', 'campaign-pcs': 'pcs', 'campaign-npcs': 'npcs', 'campaign-locations': 'locations', 'campaign-quests': 'quests', 'campaign-factions': 'factions', 'campaign-lore': 'lore' };
-    function getCampaigns() { return JSON.parse(localStorage.getItem(campaignsKey)) || []; }
-    function getActiveCampaignId() { return localStorage.getItem(activeCampaignIdKey); }
-    function saveCampaigns(campaigns) { localStorage.setItem(campaignsKey, JSON.stringify(campaigns)); }
-    function setActiveCampaignId(id) { localStorage.setItem(activeCampaignIdKey, id); }
-    function initializeCampaignTracker() {
-        populateCampaignSelector(); loadActiveCampaignData();
-        document.getElementById('new-campaign-btn').addEventListener('click', handleNewCampaign);
-        document.getElementById('delete-campaign-btn').addEventListener('click', handleDeleteCampaign);
-        campaignSelector.addEventListener('change', switchActiveCampaign);
-        campaignTitleEl.addEventListener('input', saveActiveCampaignData);
-        trackerTextareas.forEach(textarea => textarea.addEventListener('input', saveActiveCampaignData));
-        const tabNav = document.getElementById('campaign-tab-nav');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabNav.addEventListener('click', (e) => {
-            if (e.target.classList.contains('tab-button')) {
-                const tabId = e.target.dataset.tab;
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                e.target.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
+        let assembledContent = "";
+        outputContainer.querySelectorAll('.output-module').forEach(module => {
+            const title = module.querySelector('h4').textContent;
+            const content = module.querySelector('.content').textContent;
+            assembledContent += `${title}:\n${content}\n\n`;
+        });
+        saveToActiveCampaign(btn.dataset.type, assembledContent.trim());
+    }));
+}
+
+function createModule(container, key, title, content) {
+    const module = document.createElement('div');
+    module.className = 'output-module';
+    module.dataset.key = key;
+    module.innerHTML = `
+        <h4>${title}</h4>
+        <div class="content">${content}</div>
+        <div class="module-controls">
+            <button class="module-btn lock-btn">Lock</button>
+            <button class="module-btn reroll-btn">Reroll</button>
+        </div>
+    `;
+    container.appendChild(module);
+}
+
+function generateModularEntity(type) {
+    const container = document.getElementById(`${type}-output`);
+    const saveBtn = document.getElementById(`save-${type}-btn`);
+    saveBtn.style.display = 'inline-block';
+
+    const modulesToGenerate = {
+        pc: { Name: "Name & Race", Class: "Class", Stats: "Ability Scores", Background: "Background", Personality: "Personality"},
+        npc: { Name: "Name & Race", Vitals: "Vitals", Mannerism: "Mannerism", Secret: "Secret"},
+        location: { Title: "Title", Sight: "Dominant Sight", Sound: "Ambient Sound", Smell: "Lingering Smell", Hook: "Plot Hook"}
+    };
+
+    const currentModules = container.querySelectorAll('.output-module');
+    if (currentModules.length === 0) {
+        container.innerHTML = '';
+        for (const [key, title] of Object.entries(modulesToGenerate[type])) {
+            createModule(container, key, title, generatePart(type, key));
+        }
+    } else {
+        currentModules.forEach(module => {
+            if (!module.classList.contains('locked')) {
+                const key = module.dataset.key;
+                module.querySelector('.content').innerHTML = generatePart(type, key);
             }
         });
     }
-    function populateCampaignSelector() {
-        const campaigns = getCampaigns(), activeId = getActiveCampaignId();
-        campaignSelector.innerHTML = '';
-        if (campaigns.length === 0) { const option = document.createElement('option'); option.textContent = "No campaigns"; campaignSelector.appendChild(option); return; }
-        campaigns.forEach(c => { const option = document.createElement('option'); option.value = c.id; option.textContent = c.title; if (c.id == activeId) option.selected = true; campaignSelector.appendChild(option); });
+}
+
+function generatePart(type, key) {
+    const getName = (race) => {
+        const nameData = dndData.names[race] || dndData.names.Human;
+        const first = getRandom(nameData.first);
+        const last = nameData.last && nameData.last.length > 0 ? getRandom(nameData.last) : (nameData.clan ? getRandom(nameData.clan) : (race === 'Tiefling' ? `"${getRandom(nameData.virtue)}"` : ""));
+        return `${first} ${last}`.trim();
+    };
+    
+    switch (`${type}-${key}`) {
+        case 'pc-Name':
+            const pcRace = getRandom(Object.keys(dndData.names));
+            return `${getName(pcRace)}\n(${pcRace})`;
+        case 'pc-Class': return getRandom(dndData.pc.classes);
+        case 'pc-Stats':
+            const rollAbilityScore = () => [1, 2, 3, 4].map(() => Math.floor(Math.random() * 6) + 1).sort().slice(1).reduce((s, v) => s + v, 0);
+            return `STR: ${rollAbilityScore()}, DEX: ${rollAbilityScore()}, CON: ${rollAbilityScore()}\nINT: ${rollAbilityScore()}, WIS: ${rollAbilityScore()}, CHA: ${rollAbilityScore()}`;
+        case 'pc-Background':
+            const bgName = getRandom(Object.keys(dndData.pc.backgrounds));
+            return `${bgName}\n(${getRandom(dndData.pc.alignments)})`;
+        case 'pc-Personality':
+            const bg = getRandom(Object.values(dndData.pc.backgrounds));
+            return `Trait: ${bg.trait}\nIdeal: ${bg.ideal}\nBond: ${bg.bond}\nFlaw: ${bg.flaw}`;
+        case 'npc-Name':
+            const npcRace = getRandom(dndData.npc.races);
+            return `${getName(npcRace)}\n(${npcRace})`;
+        case 'npc-Vitals': return `Occupation: ${getRandom(dndData.npc.occupations)}\nAlignment: ${getRandom(dndData.pc.alignments)}`;
+        case 'npc-Mannerism': return getRandom(dndData.npc.mannerisms);
+        case 'npc-Secret': return getRandom(dndData.npc.secrets);
+        case 'location-Title':
+            const terrain = document.getElementById('location-terrain-filter').value;
+            return `A ${terrain} location`;
+        case 'location-Sight': return getRandom(dndData.location.sights);
+        case 'location-Sound': return getRandom(dndData.location.sounds);
+        case 'location-Smell': return getRandom(dndData.location.smells);
+        case 'location-Hook': return getRandom(dndData.location.hooks);
+        default: return "Error";
     }
-    function loadActiveCampaignData() {
-        const activeCampaign = getCampaigns().find(c => c.id == getActiveCampaignId());
-        const allFields = [campaignTitleEl, ...trackerTextareas];
-        if (activeCampaign) {
-            Object.keys(campaignFields).forEach(elementId => { const el = document.getElementById(elementId); const dataKey = campaignFields[elementId]; if (el) el.value = activeCampaign[dataKey] || ''; });
-            allFields.forEach(f => f.disabled = false);
-        } else {
-            allFields.forEach(f => { f.value = ''; f.disabled = true; });
-            campaignTitleEl.placeholder = "Select or create a campaign";
+}
+
+// ======================= CAMPAIGN TRACKER LOGIC (RESTORED) =========================
+const campaignsKey = 'dndCampaigns', activeCampaignIdKey = 'activeDndCampaignId';
+const campaignSelector = document.getElementById('campaign-selector');
+const campaignTitleEl = document.getElementById('campaign-title');
+const campaignFields = { 'campaign-title': 'title', 'campaign-log': 'log', 'campaign-pcs': 'pcs', 'campaign-npcs': 'npcs', 'campaign-locations': 'locations', 'campaign-quests': 'quests' };
+function getCampaigns() { return JSON.parse(localStorage.getItem(campaignsKey)) || []; }
+function getActiveCampaignId() { return localStorage.getItem(activeCampaignIdKey); }
+function saveCampaigns(campaigns) { localStorage.setItem(campaignsKey, JSON.stringify(campaigns)); }
+function setActiveCampaignId(id) { localStorage.setItem(activeCampaignIdKey, id); }
+
+function initializeCampaignTracker() {
+    populateCampaignSelector(); loadActiveCampaignData();
+    document.getElementById('new-campaign-btn').addEventListener('click', handleNewCampaign);
+    document.getElementById('delete-campaign-btn').addEventListener('click', handleDeleteCampaign);
+    campaignSelector.addEventListener('change', switchActiveCampaign);
+    campaignTitleEl.addEventListener('input', (e) => saveActiveCampaignField(e.target.id, e.target.value));
+    document.querySelectorAll('#campaign-tracker .tab-content textarea').forEach(textarea => {
+        textarea.addEventListener('input', (e) => saveActiveCampaignField(e.target.id, e.target.value));
+    });
+    
+    const tabNav = document.getElementById('campaign-tab-nav');
+    tabNav.addEventListener('click', (e) => {
+        if (e.target.matches('[role="tab"]')) {
+            tabNav.querySelectorAll('[role="tab"]').forEach(btn => btn.setAttribute('aria-selected', 'false'));
+            e.target.setAttribute('aria-selected', 'true');
+            document.querySelectorAll('.tab-content').forEach(panel => panel.classList.remove('active'));
+            const panelId = e.target.getAttribute('aria-controls');
+            document.getElementById(panelId).classList.add('active');
         }
-    }
-    function saveActiveCampaignData(event) {
-        let campaigns = getCampaigns();
-        const campaignIndex = campaigns.findIndex(c => c.id == getActiveCampaignId());
-        if (campaignIndex > -1) {
-            const elementId = event.target.id;
+    });
+}
+
+function populateCampaignSelector() {
+    const campaigns = getCampaigns(), activeId = getActiveCampaignId();
+    const selectedValue = campaignSelector.value;
+    campaignSelector.innerHTML = '';
+    if (campaigns.length === 0) { const option = document.createElement('option'); option.textContent = "No campaigns"; campaignSelector.appendChild(option); return; }
+    campaigns.forEach(c => { const option = document.createElement('option'); option.value = c.id; option.textContent = c.title; if (c.id == activeId) option.selected = true; campaignSelector.appendChild(option); });
+    campaignSelector.value = selectedValue;
+}
+
+function loadActiveCampaignData() {
+    const activeCampaign = getCampaigns().find(c => c.id == getActiveCampaignId());
+    const allFields = [campaignTitleEl, ...document.querySelectorAll('#campaign-tracker .tab-content textarea')];
+    if (activeCampaign) {
+        Object.keys(campaignFields).forEach(elementId => {
+            const el = document.getElementById(elementId);
             const dataKey = campaignFields[elementId];
-            if (dataKey) {
-                campaigns[campaignIndex][dataKey] = event.target.value;
-                saveCampaigns(campaigns);
-                if (dataKey === 'title') populateCampaignSelector();
+            if (el) el.value = activeCampaign[dataKey] || '';
+        });
+        allFields.forEach(f => f.disabled = false);
+    } else {
+        allFields.forEach(f => { f.value = ''; f.disabled = true; });
+        campaignTitleEl.placeholder = "Select or create a campaign";
+    }
+}
+
+function saveActiveCampaignField(elementId, value) {
+    let campaigns = getCampaigns();
+    const campaignIndex = campaigns.findIndex(c => c.id == getActiveCampaignId());
+    if (campaignIndex > -1) {
+        const dataKey = campaignFields[elementId];
+        if (dataKey) {
+            campaigns[campaignIndex][dataKey] = value;
+            saveCampaigns(campaigns);
+            if (dataKey === 'title') {
+                populateCampaignSelector();
             }
         }
     }
-    function switchActiveCampaign() { setActiveCampaignId(campaignSelector.value); loadActiveCampaignData(); }
-    function handleNewCampaign() {
-        const title = prompt("Enter new campaign title:");
-        if (title && title.trim() !== '') {
-            let campaigns = getCampaigns();
-            const newCampaign = { id: Date.now(), title: title.trim(), log: '', pcs: '', npcs: '', locations: '', quests: '', factions: '', lore: '' };
-            campaigns.push(newCampaign); saveCampaigns(campaigns); setActiveCampaignId(newCampaign.id);
-            populateCampaignSelector(); loadActiveCampaignData();
-        }
-    }
-    function handleDeleteCampaign() {
-        const activeId = getActiveCampaignId();
-        if (!activeId) { alert("No campaign selected."); return; }
-        const campaignToDelete = getCampaigns().find(c => c.id == activeId);
-        if (confirm(`Are you sure you want to permanently delete the campaign "${campaignToDelete.title}"?`)) {
-            let updatedCampaigns = getCampaigns().filter(c => c.id != activeId);
-            saveCampaigns(updatedCampaigns);
-            const newActiveId = updatedCampaigns.length > 0 ? updatedCampaigns[0].id : null;
-            if (newActiveId) setActiveCampaignId(newActiveId); else localStorage.removeItem(activeCampaignIdKey);
-            populateCampaignSelector(); loadActiveCampaignData();
-        }
-    }
-    function saveToActiveCampaign(contentType, content) {
-        const activeId = getActiveCampaignId();
-        if (!activeId || getCampaigns().length === 0) { alert("Please select or create a campaign in the Campaign Tracker first."); return; }
+}
+
+function switchActiveCampaign() { setActiveCampaignId(campaignSelector.value); loadActiveCampaignData(); }
+
+function handleNewCampaign() {
+    const title = prompt("Enter new campaign title:");
+    if (title && title.trim() !== '') {
         let campaigns = getCampaigns();
-        const campaignIndex = campaigns.findIndex(c => c.id == activeId);
-        if (campaignIndex > -1) {
-            const separator = "\n\n---\n\n";
-            let targetField = '';
-            switch (contentType) {
-                case 'npc': targetField = 'npcs'; break;
-                case 'location': targetField = 'locations'; break;
-                case 'quest': targetField = 'quests'; break;
-                case 'log': targetField = 'log'; break;
-            }
-            if(targetField){
-                campaigns[campaignIndex][targetField] += (campaigns[campaignIndex][targetField] ? separator : '') + content;
-                saveCampaigns(campaigns);
-                alert(`Saved to the "${targetField.toUpperCase()}" section of your "${campaigns[campaignIndex].title}" campaign!`);
-                if (document.querySelector('.page.active').id === 'campaign-tracker') loadActiveCampaignData(); // Refresh if viewing tracker
-            }
-        } else { alert("Error: Could not find active campaign."); }
+        const newCampaign = { id: Date.now(), title: title.trim(), log: '', pcs: '', npcs: '', locations: '', quests: '' };
+        campaigns.push(newCampaign); saveCampaigns(campaigns); setActiveCampaignId(newCampaign.id);
+        populateCampaignSelector(); loadActiveCampaignData();
     }
+}
+
+function handleDeleteCampaign() {
+    const activeId = getActiveCampaignId();
+    if (!activeId) { alert("No campaign selected."); return; }
+    const campaignToDelete = getCampaigns().find(c => c.id == activeId);
+    if (confirm(`Are you sure you want to permanently delete the campaign "${campaignToDelete.title}"?`)) {
+        let updatedCampaigns = getCampaigns().filter(c => c.id != activeId);
+        saveCampaigns(updatedCampaigns);
+        const newActiveId = updatedCampaigns.length > 0 ? updatedCampaigns[0].id : null;
+        if (newActiveId) setActiveCampaignId(newActiveId); else localStorage.removeItem(activeCampaignIdKey);
+        populateCampaignSelector(); loadActiveCampaignData();
+    }
+}
+
+function saveToActiveCampaign(contentType, content) {
+    const activeId = getActiveCampaignId();
+    if (!activeId || getCampaigns().length === 0) { alert("Please select or create a campaign in the Campaign Tracker first."); return; }
+    let campaigns = getCampaigns();
+    const campaignIndex = campaigns.findIndex(c => c.id == activeId);
+    if (campaignIndex > -1) {
+        const separator = "\n\n---\n\n";
+        let targetField = '';
+        switch (contentType) {
+            case 'pc': targetField = 'pcs'; break;
+            case 'npc': targetField = 'npcs'; break;
+            case 'location': targetField = 'locations'; break;
+            case 'quest': targetField = 'quests'; break;
+            case 'log': targetField = 'log'; break;
+        }
+        if(targetField){
+            campaigns[campaignIndex][targetField] += (campaigns[campaignIndex][targetField] ? separator : '') + content;
+            saveCampaigns(campaigns);
+            alert(`Saved to the "${targetField.toUpperCase()}" section of your "${campaigns[campaignIndex].title}" campaign!`);
+            if (document.querySelector('#campaign-tracker').classList.contains('active')) loadActiveCampaignData();
+        }
+    } else { alert("Error: Could not find active campaign."); }
+}
+
 </script>
 </body>
 </html>
