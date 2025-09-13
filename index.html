@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D&D Master Toolkit</title>
+    <title>Ultimate D&D Toolkit</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         :root { --primary-bg: #1a1a1d; --secondary-bg: #2d2d34; --card-bg: #25252a; --text-color: #e2e2e2; --header-color: #c5c6c7; --border-color: #4a4a4a; --font-main: 'Georgia', serif; --font-header: 'Trajan Pro', 'Palatino Linotype', serif; --page-accent-primary: #c59b34; --page-accent-secondary: #a87d22; --page-bg-image: radial-gradient(circle, #3d3d44, var(--primary-bg)); }
         body { font-family: var(--font-main); background-color: var(--primary-bg); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; background-color: var(--secondary-bg); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; background-color: var(--secondary-bg); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); }
         .page { display: none; background: var(--page-bg-image); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
         .page.active { display: block; }
-        h1, h2 { font-family: var(--font-header); text-align: center; letter-spacing: 2px; padding-bottom: 10px; border-bottom: 2px solid; word-break: break-word; }
+        h1, h2, h3 { font-family: var(--font-header); text-align: center; letter-spacing: 2px; padding-bottom: 10px; border-bottom: 2px solid; word-break: break-word; }
         h1 { font-size: 2.5em; color: var(--page-accent-primary); border-color: var(--page-accent-secondary); text-shadow: 0 0 10px var(--page-accent-primary); }
         h2 { font-size: 1.8em; color: var(--header-color); border-color: var(--border-color); }
+        h3 { font-size: 1.4em; color: var(--header-color); border-color: var(--border-color); text-align: left; }
         p { text-align: center; margin-bottom: 25px; font-style: italic; color: #b0b0b0; word-break: break-word; }
         .btn { display: inline-block; width: auto; max-width: 100%; padding: 15px 20px; margin: 5px; font-family: var(--font-header); font-size: 1.1em; letter-spacing: 1px; color: var(--text-color); background-color: var(--page-accent-primary); border: 2px solid var(--page-accent-secondary); border-radius: 5px; cursor: pointer; text-decoration: none; text-align: center; }
         .btn-return { display: block; background-color: #4a4a4a; border-color: #333; margin: 30px auto 0; }
-        .btn-small { padding: 10px 20px; font-size: 1em; margin: 0 10px; }
+        .btn-small { padding: 10px 15px; font-size: 0.9em; margin: 2px; }
         .btn-save { display: none; background-color: #388E3C; border-color: #1b5e20; }
         select, input, textarea { width: 100%; padding: 10px; background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-main); font-size: 1em;}
         textarea { min-height: 250px; resize: vertical; }
@@ -32,6 +33,7 @@
         .campaign-management label { flex-shrink: 0; }
         .campaign-management select { flex-grow: 1; }
         
+        #main-page { --page-accent-primary: #c59b34; --page-accent-secondary: #a87d22; }
         #campaign-tracker { --page-accent-primary: #a05a2c; --page-accent-secondary: #7a4521; }
         #player-creator { --page-accent-primary: #B0C4DE; --page-accent-secondary: #778899; }
         #npc-populator { --page-accent-primary: #ffab40; --page-accent-secondary: #e08c24; }
@@ -44,10 +46,12 @@
         #combat-tracker { --page-accent-primary: #B71C1C; --page-accent-secondary: #8B0000; }
         #bestiary-generator { --page-accent-primary: #4A148C; --page-accent-secondary: #311B92; }
         #loot-generator { --page-accent-primary: #FFD700; --page-accent-secondary: #B8860B; }
-        #animations-page { --page-accent-primary: #ff4500; --page-accent-secondary: #cc3700; }
-        
+        #encounter-builder { --page-accent-primary: #673AB7; --page-accent-secondary: #512DA8; }
+        #srd-library { --page-accent-primary: #009688; --page-accent-secondary: #00796B; }
+
         .modular-output { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
         .output-module { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; }
+        .output-module h4 { margin: 0 0 10px; font-family: var(--font-header); color: var(--page-accent-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
         .output-module.locked { border-color: var(--page-accent-primary); }
         .output-module .content { flex-grow: 1; white-space: pre-wrap; word-break: break-word; }
         .module-controls { display: flex; gap: 10px; margin-top: 15px; }
@@ -55,148 +59,79 @@
         .lock-btn.locked { background-color: var(--page-accent-secondary); }
         
         .tab-nav { list-style: none; padding: 0; margin: 20px 0 0; display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); }
-        .tab-button { padding: 10px 20px; cursor: pointer; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-bottom: none; border-radius: 6px 6px 0 0; margin-bottom: -1px; }
+        .tab-button { padding: 10px 15px; cursor: pointer; background-color: var(--secondary-bg); border: 1px solid var(--border-color); border-bottom: none; border-radius: 6px 6px 0 0; margin-bottom: -1px; }
         .tab-button[aria-selected="true"] { background-color: var(--card-bg); font-weight: bold; border-color: var(--page-accent-primary); border-bottom-color: var(--card-bg); }
         .tab-content { display: none; background-color: var(--card-bg); padding: 20px; border: 1px solid var(--border-color); border-top: none; }
         .tab-content.active { display: block; }
 
         .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
         .modal-backdrop.active { display: flex; }
-        .modal-content { background: var(--secondary-bg); padding: 40px; border-radius: 10px; text-align: center; border: 2px solid var(--page-accent-primary); box-shadow: 0 0 20px var(--page-accent-primary); }
+        .modal-content { background: var(--secondary-bg); padding: 40px; border-radius: 10px; text-align: center; border: 2px solid var(--page-accent-primary); box-shadow: 0 0 20px var(--page-accent-primary); max-width: 90%; max-height: 90%; overflow-y: auto; }
         .modal-content h3 { margin-top: 0; font-family: var(--font-header); color: var(--page-accent-primary); }
+        
+        .db-entry-list { max-height: 400px; overflow-y: auto; background: var(--primary-bg); padding: 10px; border-radius: 5px; }
+        .db-entry { background: var(--secondary-bg); padding: 10px; margin-bottom: 10px; border-radius: 5px; border-left: 3px solid var(--page-accent-primary); }
+        .db-entry h4 { border: none; padding: 0; margin: 0 0 5px; }
+        .db-entry p { font-style: normal; text-align: left; margin: 0; color: var(--text-color); }
+        
+        #combat-tracker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 20px; }
+        .combatant-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; }
+        .combatant-card.active-turn { border-color: var(--page-accent-primary); box-shadow: 0 0 10px var(--page-accent-primary); }
+        .combatant-card h3 { text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-top: 0; }
+        .combatant-stats { display: flex; justify-content: space-around; margin-bottom: 10px; }
+        .stat { text-align: center; } .stat strong { display: block; font-family: var(--font-header); }
+        .combatant-card textarea { min-height: 60px; font-size: 0.9em; margin-bottom: 10px; }
+        .status-tags { display: flex; flex-wrap: wrap; gap: 5px; min-height: 30px; padding: 5px; background: var(--secondary-bg); border-radius: 4px; margin-bottom: 10px; }
+        .status-tag { background: #555; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; cursor: pointer; }
+        .status-tag::after { content: ' ✖'; color: #aaa; }
+        
+        #encounter-builder .flex-container { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+        #encounter-builder .flex-child { flex: 1; min-width: 300px; }
+        #encounter-results { background-color: var(--card-bg); padding: 15px; border-radius: 8px; }
 
-        .table-wrapper { overflow-x: auto; margin-top: 20px; }
-        #combat-tracker-table { width: 100%; min-width: 600px; border-collapse: collapse; }
-        #combat-tracker-table th, #combat-tracker-table td { padding: 12px; border: 1px solid var(--border-color); text-align: center; }
-        #combat-tracker-table th { background-color: var(--card-bg); font-family: var(--font-header); }
-        #combat-tracker-table tr.active-turn { background-color: rgba(255, 215, 0, 0.2); border-left: 3px solid var(--page-accent-primary); }
-        #combat-tracker-table input[type="text"], #combat-tracker-table input[type="number"] { width: 90%; padding: 5px; text-align: center; background-color: var(--secondary-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; }
+        #srd-library .srd-entry { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        #srd-library .srd-entry h3 { border: none; padding: 0; }
+        
+        #quick-roll-section { background-color: var(--card-bg); padding: 20px; border-radius: 8px; margin-top: 20px; }
+        #quick-roll-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Main Page -->
         <div id="main-page" class="page active">
-            <h1>D&D Master Toolkit</h1>
-            <p>Your unified, single-file application for on-the-fly D&D 5e content generation and campaign management.</p>
+            <h1>Ultimate D&D Toolkit</h1>
+            <p>Your integrated, single-file application for content generation, campaign management, and in-session utility.</p>
              <div class="main-grid">
                 <button class="btn" data-page="combat-tracker">Combat Tracker</button>
                 <button class="btn" data-page="campaign-tracker">Campaign Tracker</button>
-                <button class="btn" data-page="player-creator">Player Character Creator</button>
+                <button class="btn" data-page="encounter-builder">Encounter Builder</button>
+                <button class="btn" data-page="srd-library">SRD Quick Reference</button>
                 <button class="btn" data-page="npc-populator">Instant NPC Populator</button>
                 <button class="btn" data-page="bestiary-generator">Bestiary Generator</button>
                 <button class="btn" data-page="location-generator">On-the-Fly Location</button>
+                <button class="btn" data-page="loot-generator">Loot Generator</button>
+                <button class="btn" data-page="puzzle-trap-creator">Quick Puzzle/Trap</button>
+                <button class="btn" data-page="situational-catalyst">Situational Catalyst</button>
                 <button class="btn" data-page="spellcraft-scribe">Spellcraft Scribe</button>
                 <button class="btn" data-page="maneuver-scribe">Maneuver Scribe</button>
-                <button class="btn" data-page="situational-catalyst">Situational Catalyst</button>
-                <button class="btn" data-page="puzzle-trap-creator">Quick Puzzle/Trap</button>
-                <button class="btn" data-page="loot-generator">Loot Generator</button>
-                <button class="btn" data-page="environmental-generator">Dynamic Environment</button>
-                <button class="btn" data-page="animations-page">Animation VFX Library</button>
+             </div>
+             <div id="quick-roll-section">
+                <h2>Quick Rolls</h2>
+                <div id="quick-roll-controls">
+                    <button class="btn btn-small" id="quick-roll-npc-name">NPC Name</button>
+                    <button class="btn btn-small" id="quick-roll-tavern-name">Tavern Name</button>
+                    <button class="btn btn-small" id="quick-roll-rumor">Rumor</button>
+                </div>
              </div>
              <div class="data-management">
                  <h2>Data Management</h2>
-                 <p>Save all your campaigns to a file for backup, or import a previous backup.</p>
                  <button class="btn export-btn">Export All Data</button>
                  <button class="btn import-btn">Import Data</button>
              </div>
         </div>
         
-        <!-- ==================== NEW/UPDATED PAGES ==================== -->
-
-        <!-- Combat Tracker -->
-        <div id="combat-tracker" class="page">
-            <h1>Combat Tracker</h1>
-            <p>Manage initiative, HP, and turn order. Stay in the action.</p>
-            <div class="generator-controls">
-                <button class="btn" id="add-combatant-btn">Add Combatant</button>
-                <button class="btn" id="roll-initiative-btn">Roll All Initiative</button>
-                <button class="btn" id="next-turn-btn">Next Turn</button>
-            </div>
-            <div class="table-wrapper">
-                <table id="combat-tracker-table">
-                    <thead><tr><th>Name</th><th>HP</th><th>AC</th><th>Initiative</th><th>Actions</th></tr></thead>
-                    <tbody id="combat-tracker-body"></tbody>
-                </table>
-            </div>
-            <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-
-        <!-- Bestiary Generator -->
-        <div id="bestiary-generator" class="page">
-            <h2>Bestiary Generator</h2><p>Create a unique monster piece by piece.</p>
-            <div class="generator-controls">
-                <input type="text" id="monster-idea-input" placeholder="e.g., A floating eyeball that spits acid">
-                <button class="btn" id="generate-monster-btn">Generate Monster</button>
-                <button class="btn btn-save" id="save-monster-btn" data-type="log">Save Monster</button>
-            </div>
-            <div class="modular-output" id="monster-output"></div>
-            <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-
-        <!-- Loot Generator -->
-        <div id="loot-generator" class="page">
-            <h2>Loot Generator</h2><p>Generate a treasure hoard for your victorious adventurers.</p>
-             <div class="generator-controls">
-                <div class="control-group">
-                    <label for="loot-cr-filter">Approx. CR:</label> 
-                    <select id="loot-cr-filter">
-                        <option value="low">Low (1-4)</option>
-                        <option value="mid">Mid (5-10)</option>
-                        <option value="high">High (11+)</option>
-                    </select>
-                </div>
-                <button class="btn" id="generate-loot-btn">Generate Hoard</button>
-                <button class="btn btn-save" id="save-loot-btn" data-type="log">Save Loot</button>
-            </div>
-            <div class="modular-output" id="loot-output"></div>
-            <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-        
-        <!-- Animation VFX Library (Updated) -->
-        <div id="animations-page" class="page">
-            <h2>Animation VFX Library</h2>
-            <p>Select an animation below and link it to one of your custom spells or maneuvers.</p>
-            <div id="video-library-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;"></div>
-            <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-        
-        <!-- Situational Catalyst (Converted to Modular) -->
-        <div id="situational-catalyst" class="page">
-             <h2>Situational Catalyst</h2><p>Spark a new quest, encounter, or plot twist, one piece at a time.</p>
-             <div class="generator-controls">
-                <button class="btn" id="generate-catalyst-btn">Generate Catalyst</button>
-                <button class="btn btn-small btn-save" id="save-catalyst-btn" data-type="quest">Save as Quest</button>
-            </div>
-             <div class="modular-output" id="catalyst-output"></div>
-             <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-        
-        <!-- Dynamic Environment (Converted to Modular) -->
-        <div id="environmental-generator" class="page">
-             <h2>Dynamic Environment</h2><p>Add atmospheric flavor to any scene, element by element.</p>
-             <div class="generator-controls"><button class="btn" id="generate-environment-btn">Generate Environment</button></div>
-             <div class="modular-output" id="environment-output"></div>
-             <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-        
-        <!-- Puzzle/Trap Creator (Converted to Modular) -->
-        <div id="puzzle-trap-creator" class="page">
-             <h2>Quick Puzzle/Trap</h2><p>Create a simple challenge, refining each component.</p>
-             <div class="generator-controls">
-                <div class="control-group">
-                    <label for="puzzle-trap-type">Type:</label>
-                    <select id="puzzle-trap-type"><option value="any">Any Challenge</option><option value="Puzzle">Puzzle</option><option value="Trap">Trap</option></select>
-                </div>
-                <button class="btn btn-small" id="generate-puzzle-trap-btn">Generate Challenge</button>
-                <button class="btn btn-small btn-save" id="save-puzzle-trap-btn" data-type="log">Save to Log</button>
-            </div>
-             <div class="modular-output" id="puzzle-trap-output"></div>
-             <button class="btn btn-return" data-page="main-page">Return to Main</button>
-        </div>
-
-        <!-- ==================== ORIGINAL PAGES (Still functional) ==================== -->
-        
+        <!-- ==================== CORE PAGES ==================== -->
         <div id="campaign-tracker" class="page">
             <h1>Campaign Tracker</h1>
             <div class="campaign-management">
@@ -207,88 +142,180 @@
             </div>
             <input type="text" id="campaign-title" placeholder="Select or create a campaign">
             <div role="tablist" class="tab-nav" id="campaign-tab-nav">
-                 <button role="tab" aria-selected="true" class="tab-button" id="tab-btn-log" aria-controls="tab-panel-log">Session Log</button>
-                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-pcs" aria-controls="tab-panel-pcs">PCs</button>
-                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-npcs" aria-controls="tab-panel-npcs">NPCs</button>
-                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-locations" aria-controls="tab-panel-locations">Locations</button>
-                 <button role="tab" aria-selected="false" class="tab-button" id="tab-btn-quests" aria-controls="tab-panel-quests">Quests</button>
+                 <button role="tab" aria-selected="true" class="tab-button" data-tab="log">Session Log</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="party">Party</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="pcs">PCs</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="npcs">NPCs</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="locations">Locations</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="quests">Quests</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="factions">Factions</button>
+                 <button role="tab" aria-selected="false" class="tab-button" data-tab="calendar">Calendar</button>
             </div>
             <div class="tab-content-container">
-                 <div role="tabpanel" tabindex="0" id="tab-panel-log" class="tab-content active"><label for="campaign-log">Session Log</label><textarea id="campaign-log" data-field="log"></textarea></div>
-                 <div role="tabpanel" tabindex="0" id="tab-panel-pcs" class="tab-content"><label for="campaign-pcs">Player Characters</label><textarea id="campaign-pcs" data-field="pcs"></textarea></div>
-                 <div role="tabpanel" tabindex="0" id="tab-panel-npcs" class="tab-content"><label for="campaign-npcs">Key NPCs</label><textarea id="campaign-npcs" data-field="npcs"></textarea></div>
-                 <div role="tabpanel" tabindex="0" id="tab-panel-locations" class="tab-content"><label for="campaign-locations">Locations</label><textarea id="campaign-locations" data-field="locations"></textarea></div>
-                 <div role="tabpanel" tabindex="0" id="tab-panel-quests" class="tab-content"><label for="campaign-quests">Quests</label><textarea id="campaign-quests" data-field="quests"></textarea></div>
+                 <div id="tab-panel-log" class="tab-content active"><h3>Session Log Notes</h3><textarea data-field="log"></textarea></div>
+                 <div id="tab-panel-party" class="tab-content"><h3>Party Inventory</h3><textarea data-field="partyInventory"></textarea><h3>Party Log & Achievements</h3><textarea data-field="partyLog"></textarea></div>
+                 <div id="tab-panel-pcs" class="tab-content"><h3>Saved Player Characters</h3><div class="db-entry-list" data-db="pcs"></div><h3>Notes on PCs</h3><textarea data-field="pcsNotes"></textarea></div>
+                 <div id="tab-panel-npcs" class="tab-content"><h3>Saved Non-Player Characters</h3><div class="db-entry-list" data-db="npcs"></div><h3>Notes on NPCs</h3><textarea data-field="npcsNotes"></textarea></div>
+                 <div id="tab-panel-locations" class="tab-content"><h3>Saved Locations</h3><div class="db-entry-list" data-db="locations"></div><h3>Notes on Locations</h3><textarea data-field="locationsNotes"></textarea></div>
+                 <div id="tab-panel-quests" class="tab-content"><h3>Saved Quests</h3><div class="db-entry-list" data-db="quests"></div><h3>Notes on Quests</h3><textarea data-field="questsNotes"></textarea></div>
+                 <div id="tab-panel-factions" class="tab-content"><h3>Factions & Organizations</h3><textarea data-field="factions"></textarea></div>
+                 <div id="tab-panel-calendar" class="tab-content"><h3>World Calendar & Events</h3><textarea data-field="calendar"></textarea></div>
             </div>
             <div class="data-management">
-                <h2>Data Management</h2>
-                <p>Save all your campaigns to a file for backup, or import a previous backup.</p>
-                <button class="btn export-btn">Export All Data</button>
-                <button class="btn import-btn">Import Data</button>
+                <button class="btn export-btn">Export Campaign Data</button>
+                <button class="btn import-btn">Import Campaign Data</button>
             </div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
-        <div id="player-creator" class="page">
-            <h2>Player Character Creator</h2><p>Build a character piece by piece. Lock what you like, reroll what you don't.</p>
+        
+        <div id="combat-tracker" class="page">
+            <h1>Combat Tracker</h1>
             <div class="generator-controls">
-                <button class="btn" id="generate-pc-btn">Generate All</button>
-                <button class="btn btn-save" id="save-pc-btn" data-type="pc">Save Assembled PC</button>
+                <button class="btn" id="add-combatant-btn">Add Combatant</button>
+                <button class="btn" id="roll-initiative-btn">Roll All Initiative</button>
+                <button class="btn" id="next-turn-btn">Next Turn</button>
             </div>
-            <div class="modular-output" id="pc-output"></div>
+            <div id="combat-tracker-grid"></div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
+
+        <div id="encounter-builder" class="page">
+            <h1>Encounter Builder</h1>
+            <p>Design balanced encounters based on party strength.</p>
+            <div class="flex-container">
+                <div class="flex-child">
+                    <h3>Party Setup</h3>
+                    <label for="party-size">Number of Players:</label>
+                    <input type="number" id="party-size" value="4" min="1">
+                    <label for="party-level">Average Player Level:</label>
+                    <input type="number" id="party-level" value="1" min="1" max="20">
+                    
+                    <h3 style="margin-top:20px;">Add Monsters</h3>
+                    <label for="monster-cr">Monster CR:</label>
+                    <select id="monster-cr"></select>
+                    <label for="monster-count">Number of Monsters:</label>
+                    <input type="number" id="monster-count" value="1" min="1">
+                    <button class="btn" id="add-monster-group-btn" style="width:100%; margin-top:10px;">Add to Encounter</button>
+                </div>
+                <div class="flex-child">
+                    <h3>Encounter Details</h3>
+                    <div id="encounter-results">
+                        <p>Setup your party and add monsters.</p>
+                    </div>
+                    <div id="monster-list" style="margin-top:10px;"></div>
+                </div>
+            </div>
+            <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
+        
+        <div id="srd-library" class="page">
+            <h1>SRD Quick Reference</h1>
+            <p>Quickly search for core rules, conditions, and spells.</p>
+            <input type="text" id="srd-search-input" placeholder="Search for 'Blinded' or 'Fireball'...">
+            <div id="srd-results" style="margin-top: 20px;"></div>
+            <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
+
+        <!-- ==================== GENERATOR PAGES ==================== -->
         <div id="npc-populator" class="page">
             <h2>Instant NPC Populator</h2><p>Craft a unique NPC. Lock their race, reroll their secret!</p>
             <div class="generator-controls">
                 <button class="btn" id="generate-npc-btn">Generate All</button>
-                <button class="btn btn-save" id="save-npc-btn" data-type="npc">Save Assembled NPC</button>
+                <button class="btn btn-save" id="save-npc-btn" data-type="npcs">Save Assembled NPC</button>
             </div>
             <div class="modular-output" id="npc-output"></div>
+            <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
+        <div id="bestiary-generator" class="page">
+            <h2>Bestiary Generator</h2><p>Create a unique monster piece by piece.</p>
+            <div class="generator-controls">
+                <input type="text" id="monster-idea-input" placeholder="e.g., A floating eyeball that spits acid">
+                <button class="btn" id="generate-monster-btn">Generate Monster</button>
+                <button class="btn btn-save" id="save-monster-btn" data-type="monsters">Save Monster</button>
+            </div>
+            <div class="modular-output" id="monster-output"></div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
         <div id="location-generator" class="page">
             <h2>On-the-Fly Location</h2><p>Create an evocative location, refining each sensory detail.</p>
              <div class="generator-controls">
                 <div class="control-group">
-                    <label for="location-terrain-filter">Terrain:</label> 
-                    <select id="location-terrain-filter"></select>
+                    <label for="location-terrain-filter">Terrain:</label> <select id="location-terrain-filter"></select>
                 </div>
                 <button class="btn" id="generate-location-btn">Generate All</button>
-                <button class="btn btn-save" id="save-location-btn" data-type="location">Save Assembled Location</button>
+                <button class="btn btn-save" id="save-location-btn" data-type="locations">Save Location</button>
             </div>
             <div class="modular-output" id="location-output"></div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
+        <div id="loot-generator" class="page">
+            <h2>Loot Generator</h2><p>Generate a treasure hoard for your victorious adventurers.</p>
+             <div class="generator-controls">
+                <div class="control-group">
+                    <label for="loot-cr-filter">Approx. CR:</label> <select id="loot-cr-filter"><option value="low">Low (1-4)</option><option value="mid">Mid (5-10)</option><option value="high">High (11+)</option></select>
+                </div>
+                <button class="btn" id="generate-loot-btn">Generate Hoard</button>
+            </div>
+            <div class="modular-output" id="loot-output"></div>
+            <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
+        <div id="puzzle-trap-creator" class="page">
+             <h2>Quick Puzzle/Trap</h2><p>Create a simple challenge, refining each component.</p>
+             <div class="generator-controls">
+                <div class="control-group">
+                    <label for="puzzle-trap-type">Type:</label><select id="puzzle-trap-type"><option value="any">Any Challenge</option><option value="Puzzle">Puzzle</option><option value="Trap">Trap</option></select>
+                </div>
+                <button class="btn btn-small" id="generate-puzzle-trap-btn">Generate</button>
+            </div>
+             <div class="modular-output" id="puzzle-trap-output"></div>
+             <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
+        <div id="situational-catalyst" class="page">
+             <h2>Situational Catalyst</h2><p>Spark a new quest, encounter, or plot twist.</p>
+             <div class="generator-controls">
+                <button class="btn" id="generate-catalyst-btn">Generate Catalyst</button>
+                <button class="btn btn-small btn-save" id="save-catalyst-btn" data-type="quests">Save as Quest</button>
+            </div>
+             <div class="modular-output" id="catalyst-output"></div>
+             <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
         <div id="spellcraft-scribe" class="page">
             <h1>Spellcraft Scribe</h1>
-            <p>Describe a spell and conjure it piece by piece. Lock what you love, reroll the rest.</p>
+            <p>Describe a spell and conjure it piece by piece.</p>
             <div class="generator-controls">
-                 <input type="text" id="spell-idea-input" placeholder="e.g., A plague of insects that emits from the eyes">
+                 <input type="text" id="spell-idea-input" placeholder="e.g., A plague of insects from the eyes">
                  <button class="btn" id="conjure-spell-btn">Conjure Spell</button>
-                 <button class="btn btn-save" id="save-spell-btn" data-type="log">Save to Log</button>
             </div>
             <div class="modular-output" id="spell-output"></div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
         <div id="maneuver-scribe" class="page">
             <h2>Maneuver Scribe</h2>
-            <p>Devise a custom martial attack. For fighters, rogues, and barbarians who need flair.</p>
+            <p>Devise a custom martial attack.</p>
             <div class="generator-controls">
                  <input type="text" id="maneuver-idea-input" placeholder="e.g., A sweeping sword strike that disarms">
                  <button class="btn" id="conjure-maneuver-btn">Devise Maneuver</button>
-                 <button class="btn btn-save" id="save-maneuver-btn" data-type="log">Save to Log</button>
             </div>
             <div class="modular-output" id="maneuver-output"></div>
             <button class="btn btn-return" data-page="main-page">Return to Main</button>
         </div>
+        <div id="player-creator" class="page">
+            <h2>Player Character Creator</h2><p>Build a character piece by piece.</p>
+            <div class="generator-controls">
+                <button class="btn" id="generate-pc-btn">Generate All</button>
+                <button class="btn btn-save" id="save-pc-btn" data-type="pcs">Save PC</button>
+            </div>
+            <div class="modular-output" id="pc-output"></div>
+            <button class="btn btn-return" data-page="main-page">Return to Main</button>
+        </div>
     </div>
 
-    <!-- Maintenance Pop-up Modal -->
-    <div class="modal-backdrop" id="maintenance-modal">
+    <!-- MODAL for alerts/popups -->
+    <div class="modal-backdrop" id="alert-modal">
         <div class="modal-content">
-            <h3>Feature Under Maintenance</h3>
-            <p>This functionality is currently being forged and is not yet available.</p>
-            <button class="btn btn-small" id="modal-return-btn">Return</button>
+            <h3 id="alert-modal-title">Alert</h3>
+            <p id="alert-modal-text"></p>
+            <button class="btn btn-small" id="alert-modal-close">Close</button>
         </div>
     </div>
 
@@ -300,7 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeGenerators();
     initializeCombatTracker();
     initializeDataManagement();
-    populateVfxLibrary();
+    initializeEncounterBuilder();
+    initializeSrdLibrary();
+    initializeQuickRolls();
+    initializeAlertModal();
 });
 
 function initializeNavigation() {
@@ -315,16 +345,26 @@ function initializeNavigation() {
 }
 
 function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     const activePage = document.getElementById(pageId);
     if (activePage) {
         activePage.classList.add('active');
         document.body.style.setProperty('--page-accent-primary', getComputedStyle(activePage).getPropertyValue('--page-accent-primary'));
         document.body.style.setProperty('--page-accent-secondary', getComputedStyle(activePage).getPropertyValue('--page-accent-secondary') || getComputedStyle(activePage).getPropertyValue('--page-accent-primary'));
     }
+}
+
+// Custom Alert Modal
+function initializeAlertModal() {
+    const modal = document.getElementById('alert-modal');
+    const closeBtn = document.getElementById('alert-modal-close');
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+}
+
+function showAlert(title, text) {
+    document.getElementById('alert-modal-title').textContent = title;
+    document.getElementById('alert-modal-text').textContent = text;
+    document.getElementById('alert-modal').classList.add('active');
 }
 
 const getRandom = (arr) => arr ? arr[Math.floor(Math.random() * arr.length)] : '';
@@ -342,7 +382,18 @@ const dndData = {
     spell: { elements: { fire: { damage: "Fire", school: "Evocation", adjective: "Fiery", noun: "Flame" }, ice: { damage: "Cold", school: "Evocation", adjective: "Icy", noun: "Shard" }, lightning: { damage: "Lightning", school: "Evocation", adjective: "Crackling", noun: "Bolt" }, shadow: { damage: "Necrotic", school: "Illusion", adjective: "Shadowy", noun: "Tendril" }, acid: { damage: "Acid", school: "Conjuration", adjective: "Corrosive", noun: "Glob" }, force: { damage: "Force", school: "Evocation", adjective: "Arcane", noun: "Missile" } }, substances: { blood: { damage: "Necrotic", school: "Necromancy", adjective: "Sanguine", noun: "Curse" }, poison: { damage: "Poison", school: "Necromancy", adjective: "Venomous", noun: "Fume" }, insect: { damage: "Poison", school: "Conjuration", adjective: "Chittering", noun: "Swarm" } }, forms: { dragon: "Dragon", swarm: "Swarm", wall: "Wall", chains: "Chains", bolt: "Bolt" }, delivery: { gaze: "Gaze", breath: "Breath", touch: "Touch", word: "Word" }, effects: { restrain: "Restrained", push: "Pushed", fear: "Frightened", blind: "Blinded", disease: "Diseased" }, misc: { level: ["Cantrip", "1st-level", "2nd-level", "3rd-level"], castingTime: ["1 Action", "1 Bonus Action", "Reaction"], range: ["30 feet", "60 feet", "Touch", "Self"], components: ["V, S, M", "V, S", "S, M"], duration: ["Instantaneous", "Concentration, up to 1 minute", "1 round"] } },
     maneuver: { weapons: { sword: { noun: "Sword", adjective: "Precise", verb: "thrust" }, axe: { noun: "Axe", adjective: "Brutal", verb: "swing" } }, actions: { cleave: "You {verb} your {weapon} in a wide arc.", lunge: "You lunge forward, extending your reach." }, effects: { trip: "On hit, the target must make a Strength save or be knocked prone.", disarm: "On hit, the target must make a Strength save or drop one item." }, misc: { cost: ["Action", "Bonus Action"], range: ["Melee", "5 feet"]}},
     monster: { types: ["Aberration", "Beast", "Construct", "Dragon", "Elemental", "Fey", "Giant", "Humanoid", "Monstrosity", "Ooze", "Undead"], traits: ["Amphibious", "Amorphous", "Magic Resistance", "Pack Tactics", "Regeneration"], actions: ["Bite Attack.", "Claw Attack.", "Acid Spit.", "Multiattack: Makes two claw attacks."] },
-    loot: { coins: { low: "1d100 CP, 1d20 SP", mid: "1d100 SP, 1d20 GP", high: "1d100 GP, 1d20 PP" }, gems: ["A pouch of small, flawed amethysts", "A single, perfectly cut sapphire", "A rough, unpolished diamond"], items: ["Potion of Healing", "Scroll of Fireball", "+1 Longsword", "A beautifully crafted music box"] }
+    loot: { coins: { low: "1d100 CP, 1d20 SP", mid: "1d100 SP, 1d20 GP", high: "1d100 GP, 1d20 PP" }, gems: ["A pouch of small, flawed amethysts", "A single, perfectly cut sapphire", "A rough, unpolished diamond"], items: ["Potion of Healing", "Scroll of Fireball", "+1 Longsword", "A beautifully crafted music box"] },
+    quickRolls: { tavernNames: ["The Prancing Pony", "The Green Dragon", "The Salty Siren", "The Gilded Gorgon"], rumors: ["...heard the old miller is secretly a werewolf.", "...saw strange lights over the abandoned tower.", "...whispers say the king is gravely ill.", "...a dragon was spotted flying north."] },
+    encounter: {
+        xpThresholds: [
+            { level: 1, easy: 25, medium: 50, hard: 75, deadly: 100 }, { level: 2, easy: 50, medium: 100, hard: 150, deadly: 200 }, { level: 3, easy: 75, medium: 150, hard: 225, deadly: 400 }, { level: 4, easy: 125, medium: 250, hard: 375, deadly: 500 }, { level: 5, easy: 250, medium: 500, hard: 750, deadly: 1100 }, { level: 6, easy: 300, medium: 600, hard: 900, deadly: 1400 }, { level: 7, easy: 350, medium: 750, hard: 1100, deadly: 1700 }, { level: 8, easy: 450, medium: 900, hard: 1400, deadly: 2100 }, { level: 9, easy: 550, medium: 1100, hard: 1600, deadly: 2400 }, { level: 10, easy: 600, medium: 1200, hard: 1900, deadly: 2800 }, { level: 11, easy: 800, medium: 1600, hard: 2400, deadly: 3600 }, { level: 12, easy: 1000, medium: 2000, hard: 3000, deadly: 4500 }, { level: 13, easy: 1100, medium: 2200, hard: 3400, deadly: 5100 }, { level: 14, easy: 1250, medium: 2500, hard: 3800, deadly: 5700 }, { level: 15, easy: 1400, medium: 2800, hard: 4300, deadly: 6400 }, { level: 16, easy: 1600, medium: 3200, hard: 4800, deadly: 7200 }, { level: 17, easy: 2000, medium: 3900, hard: 5900, deadly: 8800 }, { level: 18, easy: 2100, medium: 4200, hard: 6300, deadly: 9500 }, { level: 19, easy: 2400, medium: 4900, hard: 7300, deadly: 10900 }, { level: 20, easy: 2800, medium: 5700, hard: 8500, deadly: 12700 }
+        ],
+        crXp: { '0': 10, '1/8': 25, '1/4': 50, '1/2': 100, '1': 200, '2': 450, '3': 700, '4': 1100, '5': 1800, '6': 2300, '7': 2900, '8': 3900, '9': 5000, '10': 5900, '11': 7200, '12': 8400, '13': 10000, '14': 11500, '15': 13000, '16': 15000, '17': 18000, '18': 20000, '19': 22000, '20': 25000, '21': 33000, '22': 41000, '23': 50000, '24': 62000, '30': 155000 },
+        multipliers: { 1: 1, 2: 1.5, '3-6': 2, '7-10': 2.5, '11-14': 3, '15+': 4 }
+    },
+    srd: [
+        { name: "Conditions", content: "Conditions alter a creature's capabilities in a variety of ways and can arise as a result of a spell, a class feature, a monster's attack, or other effect." }, { name: "Blinded", content: "A blinded creature can't see and automatically fails any ability check that requires sight. Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage." }, { name: "Charmed", content: "A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects. The charmer has advantage on any ability check to interact socially with the creature." }, { name: "Grappled", content: "A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed. The condition ends if the grappler is incapacitated. The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect." }, { name: "Poisoned", content: "A poisoned creature has disadvantage on attack rolls and ability checks." }, { name: "Stunned", content: "A stunned creature is incapacitated, can't move, and can speak only falteringly. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage." }, { name: "Fireball", content: "Spell, 3rd-level evocation. A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one." }, { name: "Magic Missile", content: "Spell, 1st-level evocation. You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4 + 1 force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several." }
+    ]
 };
 
 // ======================= GENERATOR LOGIC =========================
@@ -374,16 +425,18 @@ function initializeGenerators() {
     });
     
     document.querySelectorAll('.btn-save').forEach(btn => btn.addEventListener('click', (e) => {
-        const entityType = e.target.id.split('-')[1];
+        const entityType = e.target.id.split('-')[1]; // pc, npc, etc.
         const outputArea = document.getElementById(`${entityType}-output`);
-        if (outputArea?.classList.contains('modular-output')) { 
-            let content = ""; 
-            outputArea.querySelectorAll('.output-module').forEach(m => { 
+        if (outputArea?.classList.contains('modular-output')) {
+            const assembledObject = { id: Date.now(), details: {} };
+            outputArea.querySelectorAll('.output-module').forEach(m => {
                 const title = m.querySelector('h4').textContent;
-                const body = m.querySelector('.content').innerHTML.replace(/<br\s*[\/]?>/gi, "\n").replace(/<\/?[^>]+(>|$)/g, "");
-                content += `${title}:\n${body}\n\n`; 
-            }); 
-            saveToActiveCampaign(e.target.dataset.type, content.trim());
+                const body = m.querySelector('.content').innerText;
+                assembledObject.details[title] = body;
+                if (title.includes('Name')) assembledObject.name = body.split('\n')[0];
+            });
+            if (!assembledObject.name) assembledObject.name = "Unnamed Entry";
+            saveToActiveCampaign(e.target.dataset.type, assembledObject);
         }
     }));
 }
@@ -404,12 +457,12 @@ function generateModularEntity(type) {
     const modules = {
         pc: { Name: "Name & Race", Class: "Class", Stats: "Ability Scores", Background: "Background"},
         npc: { Name: "Name & Race", Vitals: "Vitals", Mannerism: "Mannerism", Secret: "Secret"},
-        location: { Title: "Title", Sight: "Dominant Sight", Sound: "Ambient Sound", Smell: "Lingering Smell"},
+        location: { Name: "Name", Sight: "Dominant Sight", Sound: "Ambient Sound", Smell: "Lingering Smell"},
+        monster: { Name: "Name & Type", Vitals: "Vitals", Trait: "Primary Trait", Action: "Main Action" },
+        catalyst: { Name: "Quest Hook", Actor: "The Actor", Action: "The Action", Subject: "The Subject", Twist: "The Twist" },
         spell: { Name: "Name & Level", Details: "Casting Details", Description: "Spell Description"},
         maneuver: { Name: "Name", Details: "Action Details", Description: "Maneuver Description"},
-        monster: { Name: "Name & Type", Vitals: "Vitals", Trait: "Primary Trait", Action: "Main Action" },
         loot: { Coins: "Coinage", Gems: "Valuables", Item: "Special Item" },
-        catalyst: { Actor: "The Actor", Action: "The Action", Subject: "The Subject", Twist: "The Twist" },
         environment: { Sight: "Dominant Sight", Sound: "Ambient Sound", Smell: "Lingering Smell" },
         'puzzle-trap': { Type: "Type", Trigger: "The Trigger", Mechanism: "The Mechanism", Solution: "The Solution" }
     };
@@ -447,7 +500,7 @@ function generatePart(type, key) {
         case 'npc-Vitals': return `Occupation: ${getRandom(dndData.npc.occupations)}\nAlignment: ${getRandom(dndData.pc.alignments)}`; 
         case 'npc-Mannerism': return getRandom(dndData.npc.mannerisms); 
         case 'npc-Secret': return getRandom(dndData.npc.secrets); 
-        case 'location-Title': return `A ${document.getElementById('location-terrain-filter').value} place`; 
+        case 'location-Name': return `${getRandom(['The Whispering', 'The Broken', 'The Sunken', 'The Gilded'])} ${document.getElementById('location-terrain-filter').value}`; 
         case 'location-Sight': return getRandom(dndData.location.sights); 
         case 'location-Sound': return getRandom(dndData.location.sounds); 
         case 'location-Smell': return getRandom(dndData.location.smells); 
@@ -464,6 +517,7 @@ function generatePart(type, key) {
         case 'loot-Coins': return dndData.loot.coins[document.getElementById('loot-cr-filter').value];
         case 'loot-Gems': return getRandom(dndData.loot.gems);
         case 'loot-Item': return getRandom(dndData.loot.items);
+        case 'catalyst-Name': return `The Case of the ${getRandom(dndData.catalyst.actors).split(' ').pop()}`;
         case 'catalyst-Actor': return getRandom(dndData.catalyst.actors);
         case 'catalyst-Action': return getRandom(dndData.catalyst.actions);
         case 'catalyst-Subject': return getRandom(dndData.catalyst.subjects);
@@ -500,27 +554,6 @@ function generateManeuverFromIdea(idea) {
     return { name, description };
 }
 
-// ======================= VFX & MAINTENANCE MODAL LOGIC =========================
-function populateVfxLibrary() {
-    const grid = document.getElementById('video-library-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const vfxList = [{id:'fire-01', icon:'🔥', name:'Fireball'}, {id:'lightning-01', icon:'⚡', name:'Lightning'}, {id:'slash-01', icon:'⚔️', name:'Sword Slash'}];
-    vfxList.forEach(vfx => {
-        const thumb = document.createElement('div');
-        thumb.className = 'video-thumbnail';
-        thumb.innerHTML = `<div class="video-thumbnail-img">${vfx.icon}</div><strong>${vfx.name}</strong><button class="btn btn-small">Link</button>`;
-        thumb.querySelector('button').addEventListener('click', () => showMaintenanceModal());
-        grid.appendChild(thumb);
-    });
-}
-function showMaintenanceModal() {
-    document.getElementById('maintenance-modal').classList.add('active');
-}
-document.getElementById('modal-return-btn').addEventListener('click', () => {
-    document.getElementById('maintenance-modal').classList.remove('active');
-});
-
 // ======================= CAMPAIGN TRACKER LOGIC =========================
 const campaignsKey = 'dndCampaigns', activeCampaignIdKey = 'activeDndCampaignId';
 function initializeCampaignTracker() {
@@ -538,43 +571,95 @@ function initializeCampaignTracker() {
         if (e.target.matches('.tab-button')) {
             tabNav.querySelectorAll('.tab-button').forEach(btn => btn.setAttribute('aria-selected', 'false'));
             e.target.setAttribute('aria-selected', 'true');
-            const targetPanelId = e.target.getAttribute('aria-controls');
+            const targetPanelId = `tab-panel-${e.target.dataset.tab}`;
             document.querySelectorAll('#campaign-tracker .tab-content').forEach(panel => panel.classList.toggle('active', panel.id === targetPanelId));
         }
     });
 }
 function getCampaigns() { return JSON.parse(localStorage.getItem(campaignsKey)) || {}; }
 function saveCampaigns(campaigns) { localStorage.setItem(campaignsKey, JSON.stringify(campaigns)); }
+
+function createNewCampaign() {
+    const title = prompt("Enter new campaign name:", "My New Campaign");
+    if (!title) return;
+    const campaigns = getCampaigns();
+    const newId = `campaign_${Date.now()}`;
+    campaigns[newId] = { 
+        title, 
+        log: '', partyInventory: '', partyLog: '', pcsNotes: '', npcsNotes: '', locationsNotes: '', questsNotes: '', factions: '', calendar: '',
+        database: { pcs: [], npcs: [], locations: [], quests: [], monsters: [] }
+    };
+    saveCampaigns(campaigns);
+    localStorage.setItem(activeCampaignIdKey, newId);
+    loadCampaigns();
+}
+
+function deleteActiveCampaign() {
+    const activeId = localStorage.getItem(activeCampaignIdKey);
+    if (!activeId || !getCampaigns()[activeId]) return showAlert("Error", "No campaign selected to delete.");
+    if (confirm(`Are you sure you want to permanently delete "${getCampaigns()[activeId]?.title}"?`)) {
+        const campaigns = getCampaigns();
+        delete campaigns[activeId];
+        saveCampaigns(campaigns);
+        localStorage.setItem(activeCampaignIdKey, '');
+        loadCampaigns();
+    }
+}
+
 function loadCampaigns() {
     const campaigns = getCampaigns();
     const activeId = localStorage.getItem(activeCampaignIdKey);
     const selector = document.getElementById('campaign-selector');
     selector.innerHTML = '<option value="">-- Select a Campaign --</option>';
+    let campaignExists = false;
     for (const id in campaigns) {
+        if (id === activeId) campaignExists = true;
         const option = document.createElement('option');
         option.value = id; option.textContent = campaigns[id].title; option.selected = id === activeId;
         selector.appendChild(option);
     }
+    if (!campaignExists) localStorage.setItem(activeCampaignIdKey, '');
     loadActiveCampaign();
 }
+
 function loadActiveCampaign() {
     const campaigns = getCampaigns();
     const activeId = localStorage.getItem(activeCampaignIdKey);
     const campaign = campaigns[activeId];
     const titleEl = document.getElementById('campaign-title');
     const textareas = document.querySelectorAll('#campaign-tracker textarea');
+    const dbLists = document.querySelectorAll('.db-entry-list');
+    
     if (campaign) {
         titleEl.value = campaign.title || '';
         textareas.forEach(ta => { ta.value = campaign[ta.dataset.field] || ''; });
         titleEl.disabled = false;
         textareas.forEach(ta => ta.disabled = false);
+        // Render database entries
+        dbLists.forEach(list => {
+            const dbKey = list.dataset.db;
+            list.innerHTML = '';
+            if (campaign.database && campaign.database[dbKey]) {
+                campaign.database[dbKey].forEach(item => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'db-entry';
+                    let content = `<h4>${item.name}</h4>`;
+                    for(const [key, value] of Object.entries(item.details)) {
+                        content += `<p><strong>${key}:</strong> ${value.replace(/\n/g, ', ')}</p>`;
+                    }
+                    entryDiv.innerHTML = content;
+                    list.appendChild(entryDiv);
+                });
+            }
+        });
     } else {
         titleEl.value = 'No campaign selected';
-        textareas.forEach(ta => ta.value = '');
+        textareas.forEach(ta => { ta.value = ''; ta.disabled = true; });
+        dbLists.forEach(list => list.innerHTML = '');
         titleEl.disabled = true;
-        textareas.forEach(ta => ta.disabled = true);
     }
 }
+
 function saveCampaignData() {
     const activeId = localStorage.getItem(activeCampaignIdKey);
     if (!activeId) return;
@@ -589,44 +674,19 @@ function saveCampaignData() {
     const selectedOption = document.querySelector(`#campaign-selector option[value="${activeId}"]`);
     if (selectedOption && selectedOption.textContent !== titleEl.value) selectedOption.textContent = titleEl.value;
 }
-function createNewCampaign() {
-    const title = prompt("Enter new campaign name:", "My New Campaign");
-    if (!title) return;
+
+function saveToActiveCampaign(type, contentObject) {
+    const activeId = localStorage.getItem(activeCampaignIdKey);
+    if (!activeId) return showAlert("Error", "Please select or create a campaign first to save this content.");
     const campaigns = getCampaigns();
-    const newId = `campaign_${Date.now()}`;
-    campaigns[newId] = { title, log: '', pcs: '', npcs: '', locations: '', quests: '' };
+    const campaign = campaigns[activeId];
+    if (!campaign.database) campaign.database = {};
+    if (!campaign.database[type]) campaign.database[type] = [];
+    
+    campaign.database[type].push(contentObject);
     saveCampaigns(campaigns);
-    localStorage.setItem(activeCampaignIdKey, newId);
-    loadCampaigns();
-}
-function deleteActiveCampaign() {
-    const activeId = localStorage.getItem(activeCampaignIdKey);
-    if (!activeId || !getCampaigns()[activeId]) return alert("No campaign selected to delete.");
-    if (confirm(`Are you sure you want to permanently delete "${getCampaigns()[activeId]?.title}"?`)) {
-        const campaigns = getCampaigns();
-        delete campaigns[activeId];
-        saveCampaigns(campaigns);
-        localStorage.setItem(activeCampaignIdKey, '');
-        loadCampaigns();
-    }
-}
-function saveToActiveCampaign(type, content) {
-    const activeId = localStorage.getItem(activeCampaignIdKey);
-    if (!activeId) return alert("Please select or create a campaign first to save this content.");
-    let targetField;
-    switch(type) {
-        case 'pc': targetField = 'pcs'; break;
-        case 'npc': targetField = 'npcs'; break;
-        case 'location': targetField = 'locations'; break;
-        case 'quest': targetField = 'quests'; break;
-        default: targetField = 'log'; break;
-    }
-    const targetArea = document.querySelector(`#campaign-tracker textarea[data-field="${targetField}"]`);
-    if (targetArea) {
-        targetArea.value += (targetArea.value ? '\n\n' : '') + `${content}\n${'-'.repeat(40)}`;
-        saveCampaignData();
-        alert(`Content saved to the "${targetField.toUpperCase()}" tab of your active campaign.`);
-    }
+    showAlert("Success!", `${contentObject.name} was saved to your campaign's ${type.toUpperCase()} database.`);
+    loadActiveCampaign(); // Refresh the view
 }
 
 // ======================= COMBAT TRACKER LOGIC =========================
@@ -637,108 +697,241 @@ function initializeCombatTracker() {
     document.getElementById('add-combatant-btn').addEventListener('click', addCombatant);
     document.getElementById('roll-initiative-btn').addEventListener('click', rollAllInitiative);
     document.getElementById('next-turn-btn').addEventListener('click', nextTurn);
-    document.getElementById('combat-tracker-body').addEventListener('click', e => {
+    document.getElementById('combat-tracker-grid').addEventListener('click', e => {
         if (e.target.classList.contains('remove-combatant-btn')) {
-            const index = e.target.closest('tr').dataset.index;
-            removeCombatant(index);
+            removeCombatant(e.target.dataset.id);
+        } else if (e.target.classList.contains('status-tag')) {
+            const combatantId = e.target.closest('.combatant-card').dataset.id;
+            const status = e.target.textContent.slice(0, -2); // Remove ' ✖'
+            removeStatus(combatantId, status);
         }
     });
-    document.getElementById('combat-tracker-body').addEventListener('change', e => {
-        if (e.target.matches('input')) {
-            const index = e.target.closest('tr').dataset.index;
-            const field = e.target.dataset.field;
-            updateCombatant(index, field, e.target.value);
+    document.getElementById('combat-tracker-grid').addEventListener('change', e => {
+        if (e.target.matches('input, textarea')) {
+            const combatantId = e.target.closest('.combatant-card').dataset.id;
+            updateCombatant(combatantId, e.target.dataset.field, e.target.value);
+        }
+    });
+    document.getElementById('combat-tracker-grid').addEventListener('keydown', e => {
+        if (e.key === 'Enter' && e.target.classList.contains('status-input')) {
+            e.preventDefault();
+            const combatantId = e.target.closest('.combatant-card').dataset.id;
+            addStatus(combatantId, e.target.value);
+            e.target.value = '';
         }
     });
 }
 
 function renderCombatTracker() {
-    const tbody = document.getElementById('combat-tracker-body');
-    tbody.innerHTML = '';
+    const grid = document.getElementById('combat-tracker-grid');
+    grid.innerHTML = '';
     combatants.forEach((c, index) => {
-        const row = document.createElement('tr');
-        row.dataset.index = index;
-        if (index === currentTurnIndex) row.classList.add('active-turn');
-        row.innerHTML = `
-            <td><input type="text" data-field="name" value="${c.name}"></td>
-            <td><input type="number" data-field="hp" value="${c.hp}"></td>
-            <td><input type="number" data-field="ac" value="${c.ac}"></td>
-            <td><input type="number" data-field="initiative" value="${c.initiative}"></td>
-            <td><button class="btn-small remove-combatant-btn">Remove</button></td>
+        const card = document.createElement('div');
+        card.className = 'combatant-card';
+        card.dataset.id = c.id;
+        if (index === currentTurnIndex) card.classList.add('active-turn');
+        
+        const statusTags = c.statuses.map(s => `<span class="status-tag">${s}</span>`).join('');
+
+        card.innerHTML = `
+            <input type="text" data-field="name" value="${c.name}" style="font-family: var(--font-header); font-size: 1.4em; text-align: center; border: none; background: transparent; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;">
+            <div class="combatant-stats">
+                <div class="stat"><strong>HP</strong><input type="number" data-field="hp" value="${c.hp}" style="width: 70px;"></div>
+                <div class="stat"><strong>AC</strong><input type="number" data-field="ac" value="${c.ac}" style="width: 70px;"></div>
+                <div class="stat"><strong>INIT</strong><input type="number" data-field="initiative" value="${c.initiative}" style="width: 70px;"></div>
+            </div>
+            <label>Notes:</label>
+            <textarea data-field="notes">${c.notes}</textarea>
+            <label>Status Effects:</label>
+            <div class="status-tags">${statusTags}</div>
+            <input type="text" class="status-input" placeholder="Type status & press Enter...">
+            <button class="btn btn-small remove-combatant-btn" data-id="${c.id}" style="width: 100%; background-color: #8B0000;">Remove</button>
         `;
-        tbody.appendChild(row);
+        grid.appendChild(card);
     });
 }
 
 function addCombatant() {
-    combatants.push({ id: Date.now(), name: 'Creature', hp: 10, ac: 10, initiative: 0 });
+    combatants.push({ id: Date.now(), name: 'Creature', hp: 10, ac: 10, initiative: 0, notes: '', statuses: [] });
     renderCombatTracker();
 }
-
-function removeCombatant(index) {
-    combatants.splice(index, 1);
-    if(currentTurnIndex >= combatants.length) currentTurnIndex = combatants.length > 0 ? 0 : -1;
-    else if (currentTurnIndex > index) currentTurnIndex--;
-    renderCombatTracker();
-}
-
-function updateCombatant(index, field, value) {
-    if (combatants[index]) {
-        combatants[index][field] = value;
+function removeCombatant(id) {
+    const index = combatants.findIndex(c => c.id == id);
+    if (index > -1) {
+        combatants.splice(index, 1);
+        if(currentTurnIndex >= combatants.length) currentTurnIndex = combatants.length > 0 ? 0 : -1;
+        else if (currentTurnIndex > index) currentTurnIndex--;
+        renderCombatTracker();
     }
 }
-
+function updateCombatant(id, field, value) {
+    const combatant = combatants.find(c => c.id == id);
+    if (combatant) combatant[field] = value;
+}
+function addStatus(id, status) {
+    const combatant = combatants.find(c => c.id == id);
+    if (combatant && status.trim() !== '' && !combatant.statuses.includes(status.trim())) {
+        combatant.statuses.push(status.trim());
+        renderCombatTracker();
+    }
+}
+function removeStatus(id, status) {
+    const combatant = combatants.find(c => c.id == id);
+    if (combatant) {
+        combatant.statuses = combatant.statuses.filter(s => s !== status);
+        renderCombatTracker();
+    }
+}
 function rollAllInitiative() {
-    combatants.forEach(c => {
-        c.initiative = Math.floor(Math.random() * 20) + 1;
-    });
+    combatants.forEach(c => c.initiative = Math.floor(Math.random() * 20) + 1 + (c.initBonus || 0));
     combatants.sort((a, b) => b.initiative - a.initiative);
     currentTurnIndex = combatants.length > 0 ? 0 : -1;
     renderCombatTracker();
 }
-
 function nextTurn() {
     if (combatants.length === 0) return;
-    currentTurnIndex++;
-    if (currentTurnIndex >= combatants.length) {
-        currentTurnIndex = 0;
-    }
+    currentTurnIndex = (currentTurnIndex + 1) % combatants.length;
     renderCombatTracker();
+}
+
+// ======================= ENCOUNTER BUILDER LOGIC ========================
+let encounterMonsters = [];
+function initializeEncounterBuilder() {
+    const crSelect = document.getElementById('monster-cr');
+    crSelect.innerHTML = Object.keys(dndData.encounter.crXp).map(cr => `<option value="${cr}">${cr}</option>`).join('');
+    
+    document.getElementById('add-monster-group-btn').addEventListener('click', addMonsterToEncounter);
+    document.getElementById('party-size').addEventListener('input', calculateEncounter);
+    document.getElementById('party-level').addEventListener('input', calculateEncounter);
+}
+function addMonsterToEncounter() {
+    const cr = document.getElementById('monster-cr').value;
+    const count = parseInt(document.getElementById('monster-count').value);
+    if (count > 0) {
+        encounterMonsters.push({ cr, count });
+        calculateEncounter();
+    }
+}
+function calculateEncounter() {
+    const partySize = parseInt(document.getElementById('party-size').value);
+    const partyLevel = parseInt(document.getElementById('party-level').value);
+    if (!partySize || !partyLevel) return;
+    
+    const thresholds = dndData.encounter.xpThresholds.find(t => t.level === partyLevel);
+    if (!thresholds) return;
+    
+    const partyThresholds = {
+        easy: thresholds.easy * partySize,
+        medium: thresholds.medium * partySize,
+        hard: thresholds.hard * partySize,
+        deadly: thresholds.deadly * partySize
+    };
+
+    let totalMonsters = 0;
+    let totalXp = 0;
+    encounterMonsters.forEach(group => {
+        totalMonsters += group.count;
+        totalXp += dndData.encounter.crXp[group.cr] * group.count;
+    });
+
+    let multiplier = 1;
+    if (partySize < 3) { // DMG adjustment for small parties
+        if (totalMonsters === 1) multiplier = 1.5;
+        else if (totalMonsters === 2) multiplier = 2;
+        else if (totalMonsters >= 3 && totalMonsters <= 6) multiplier = 2.5;
+        else if (totalMonsters >= 7 && totalMonsters <= 10) multiplier = 3;
+        else if (totalMonsters >= 11) multiplier = 4;
+    } else { // Standard party size
+        if (totalMonsters === 2) multiplier = 1.5;
+        else if (totalMonsters >= 3 && totalMonsters <= 6) multiplier = 2;
+        else if (totalMonsters >= 7 && totalMonsters <= 10) multiplier = 2.5;
+        else if (totalMonsters >= 11 && totalMonsters <= 14) multiplier = 3;
+        else if (totalMonsters >= 15) multiplier = 4;
+    }
+
+    const adjustedXp = Math.floor(totalXp * multiplier);
+    let difficulty = "Trivial";
+    if (adjustedXp >= partyThresholds.deadly) difficulty = "Deadly";
+    else if (adjustedXp >= partyThresholds.hard) difficulty = "Hard";
+    else if (adjustedXp >= partyThresholds.medium) difficulty = "Medium";
+    else if (adjustedXp >= partyThresholds.easy) difficulty = "Easy";
+
+    const resultsDiv = document.getElementById('encounter-results');
+    resultsDiv.innerHTML = `
+        <h3>Party Thresholds (Lvl ${partyLevel} x${partySize})</h3>
+        <p>Easy: ${partyThresholds.easy} XP | Medium: ${partyThresholds.medium} XP</p>
+        <p>Hard: ${partyThresholds.hard} XP | Deadly: ${partyThresholds.deadly} XP</p>
+        <hr>
+        <h3>Encounter Difficulty</h3>
+        <p>Total XP: ${totalXp} | Adjusted XP: ${adjustedXp}</p>
+        <h3 style="text-align:center; color: var(--page-accent-primary);">${difficulty}</h3>
+    `;
+
+    const monsterListDiv = document.getElementById('monster-list');
+    monsterListDiv.innerHTML = '<h3>Current Monsters</h3>' + encounterMonsters.map((m, i) => `<p>${m.count} x CR ${m.cr} Monster(s) <button class="btn-small" onclick="removeMonsterFromEncounter(${i})">X</button></p>`).join('');
+    if(encounterMonsters.length === 0) monsterListDiv.innerHTML = '';
+}
+function removeMonsterFromEncounter(index) {
+    encounterMonsters.splice(index, 1);
+    calculateEncounter();
+}
+
+// ======================= SRD LIBRARY LOGIC ========================
+function initializeSrdLibrary() {
+    const searchInput = document.getElementById('srd-search-input');
+    searchInput.addEventListener('input', () => renderSrdResults(searchInput.value));
+    renderSrdResults();
+}
+function renderSrdResults(query = '') {
+    const resultsDiv = document.getElementById('srd-results');
+    const filtered = dndData.srd.filter(item => item.name.toLowerCase().includes(query.toLowerCase()) || item.content.toLowerCase().includes(query.toLowerCase()));
+    if (filtered.length > 0) {
+        resultsDiv.innerHTML = filtered.map(item => `
+            <div class="srd-entry">
+                <h3>${item.name}</h3>
+                <p>${item.content}</p>
+            </div>
+        `).join('');
+    } else {
+        resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
+    }
+}
+
+// ======================= QUICK ROLL LOGIC ========================
+function initializeQuickRolls() {
+    document.getElementById('quick-roll-npc-name').addEventListener('click', () => {
+        const race = getRandom(Object.keys(dndData.names));
+        const name = `${getRandom(dndData.names[race].first)} ${getRandom(dndData.names[race].last || dndData.names[race].clan || '')}`.trim();
+        showAlert("Random NPC Name", `${name} (${race})`);
+    });
+    document.getElementById('quick-roll-tavern-name').addEventListener('click', () => {
+        showAlert("Random Tavern Name", getRandom(dndData.quickRolls.tavernNames));
+    });
+    document.getElementById('quick-roll-rumor').addEventListener('click', () => {
+        showAlert("Random Rumor", getRandom(dndData.quickRolls.rumors));
+    });
 }
 
 // ======================= DATA MANAGEMENT LOGIC ========================
 function initializeDataManagement() {
-    document.querySelectorAll('.export-btn').forEach(btn => {
-        btn.addEventListener('click', exportAllData);
-    });
-    document.querySelectorAll('.import-btn').forEach(btn => {
-        btn.addEventListener('click', importData);
-    });
+    document.querySelectorAll('.export-btn').forEach(btn => btn.addEventListener('click', exportAllData));
+    document.querySelectorAll('.import-btn').forEach(btn => btn.addEventListener('click', importData));
 }
-
 function exportAllData() {
     try {
-        const dataToExport = {
-            campaigns: JSON.parse(localStorage.getItem(campaignsKey) || '{}'),
-            activeCampaignId: localStorage.getItem(activeCampaignIdKey) || ''
-        };
-        const dataStr = JSON.stringify(dataToExport, null, 2);
-        const dataBlob = new Blob([dataStr], {type: "application/json"});
+        const data = localStorage.getItem(campaignsKey);
+        if(!data || data === "{}") return showAlert("Export Failed", "No campaign data to export.");
+        const dataBlob = new Blob([data], {type: "application/json"});
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
         link.href = url;
         link.download = `dnd-toolkit-backup-${new Date().toISOString().slice(0,10)}.json`;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        alert('Data exported successfully!');
     } catch (error) {
-        alert('Could not export data. Your stored data might be corrupted.');
-        console.error("Export error:", error);
+        showAlert('Export Error', 'Could not export data. Your stored data might be corrupted.');
     }
 }
-
 function importData() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -750,20 +943,15 @@ function importData() {
         reader.onload = readerEvent => {
             try {
                 const content = readerEvent.target.result;
-                const data = JSON.parse(content);
-                if (data.campaigns && typeof data.campaigns === 'object' && confirm("This will overwrite all current campaign data. Are you sure?")) {
-                    localStorage.setItem(campaignsKey, JSON.stringify(data.campaigns));
-                    if (data.activeCampaignId) {
-                        localStorage.setItem(activeCampaignIdKey, data.activeCampaignId);
-                    }
-                    alert('Data imported successfully! The page will now reload.');
-                    window.location.reload();
-                } else {
-                    alert('Import cancelled or file is not a valid backup.');
+                JSON.parse(content); // Validate JSON
+                if (confirm("This will overwrite all current campaign data. Are you sure?")) {
+                    localStorage.setItem(campaignsKey, content);
+                    localStorage.removeItem(activeCampaignIdKey); // Clear active campaign to avoid errors
+                    showAlert('Import Success!', 'Data imported successfully! The page will now reload.');
+                    setTimeout(() => window.location.reload(), 1500);
                 }
             } catch (error) {
-                alert('Failed to read the file. Please ensure it is a valid JSON backup from this tool.');
-                console.error("Import error:", error);
+                showAlert('Import Error', 'Failed to read the file. Please ensure it is a valid JSON backup from this tool.');
             }
         };
         reader.readAsText(file);
