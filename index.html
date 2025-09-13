@@ -92,8 +92,6 @@
         #srd-library .srd-entry { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         #srd-library .srd-entry h3 { border: none; padding: 0; }
         
-        #quick-roll-section { background-color: var(--card-bg); padding: 20px; border-radius: 8px; margin-top: 20px; }
-        #quick-roll-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
     </style>
 </head>
 <body>
@@ -105,6 +103,7 @@
              <div class="main-grid">
                 <button class="btn" data-page="combat-tracker">Combat Tracker</button>
                 <button class="btn" data-page="campaign-tracker">Campaign Tracker</button>
+                <button class="btn" data-page="player-creator">Player Character Creator</button>
                 <button class="btn" data-page="encounter-builder">Encounter Builder</button>
                 <button class="btn" data-page="srd-library">SRD Quick Reference</button>
                 <button class="btn" data-page="npc-populator">Instant NPC Populator</button>
@@ -115,14 +114,6 @@
                 <button class="btn" data-page="situational-catalyst">Situational Catalyst</button>
                 <button class="btn" data-page="spellcraft-scribe">Spellcraft Scribe</button>
                 <button class="btn" data-page="maneuver-scribe">Maneuver Scribe</button>
-             </div>
-             <div id="quick-roll-section">
-                <h2>Quick Rolls</h2>
-                <div id="quick-roll-controls">
-                    <button class="btn btn-small" id="quick-roll-npc-name">NPC Name</button>
-                    <button class="btn btn-small" id="quick-roll-tavern-name">Tavern Name</button>
-                    <button class="btn btn-small" id="quick-roll-rumor">Rumor</button>
-                </div>
              </div>
              <div class="data-management">
                  <h2>Data Management</h2>
@@ -329,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDataManagement();
     initializeEncounterBuilder();
     initializeSrdLibrary();
-    initializeQuickRolls();
     initializeAlertModal();
 });
 
@@ -383,7 +373,6 @@ const dndData = {
     maneuver: { weapons: { sword: { noun: "Sword", adjective: "Precise", verb: "thrust" }, axe: { noun: "Axe", adjective: "Brutal", verb: "swing" } }, actions: { cleave: "You {verb} your {weapon} in a wide arc.", lunge: "You lunge forward, extending your reach." }, effects: { trip: "On hit, the target must make a Strength save or be knocked prone.", disarm: "On hit, the target must make a Strength save or drop one item." }, misc: { cost: ["Action", "Bonus Action"], range: ["Melee", "5 feet"]}},
     monster: { types: ["Aberration", "Beast", "Construct", "Dragon", "Elemental", "Fey", "Giant", "Humanoid", "Monstrosity", "Ooze", "Undead"], traits: ["Amphibious", "Amorphous", "Magic Resistance", "Pack Tactics", "Regeneration"], actions: ["Bite Attack.", "Claw Attack.", "Acid Spit.", "Multiattack: Makes two claw attacks."] },
     loot: { coins: { low: "1d100 CP, 1d20 SP", mid: "1d100 SP, 1d20 GP", high: "1d100 GP, 1d20 PP" }, gems: ["A pouch of small, flawed amethysts", "A single, perfectly cut sapphire", "A rough, unpolished diamond"], items: ["Potion of Healing", "Scroll of Fireball", "+1 Longsword", "A beautifully crafted music box"] },
-    quickRolls: { tavernNames: ["The Prancing Pony", "The Green Dragon", "The Salty Siren", "The Gilded Gorgon"], rumors: ["...heard the old miller is secretly a werewolf.", "...saw strange lights over the abandoned tower.", "...whispers say the king is gravely ill.", "...a dragon was spotted flying north."] },
     encounter: {
         xpThresholds: [
             { level: 1, easy: 25, medium: 50, hard: 75, deadly: 100 }, { level: 2, easy: 50, medium: 100, hard: 150, deadly: 200 }, { level: 3, easy: 75, medium: 150, hard: 225, deadly: 400 }, { level: 4, easy: 125, medium: 250, hard: 375, deadly: 500 }, { level: 5, easy: 250, medium: 500, hard: 750, deadly: 1100 }, { level: 6, easy: 300, medium: 600, hard: 900, deadly: 1400 }, { level: 7, easy: 350, medium: 750, hard: 1100, deadly: 1700 }, { level: 8, easy: 450, medium: 900, hard: 1400, deadly: 2100 }, { level: 9, easy: 550, medium: 1100, hard: 1600, deadly: 2400 }, { level: 10, easy: 600, medium: 1200, hard: 1900, deadly: 2800 }, { level: 11, easy: 800, medium: 1600, hard: 2400, deadly: 3600 }, { level: 12, easy: 1000, medium: 2000, hard: 3000, deadly: 4500 }, { level: 13, easy: 1100, medium: 2200, hard: 3400, deadly: 5100 }, { level: 14, easy: 1250, medium: 2500, hard: 3800, deadly: 5700 }, { level: 15, easy: 1400, medium: 2800, hard: 4300, deadly: 6400 }, { level: 16, easy: 1600, medium: 3200, hard: 4800, deadly: 7200 }, { level: 17, easy: 2000, medium: 3900, hard: 5900, deadly: 8800 }, { level: 18, easy: 2100, medium: 4200, hard: 6300, deadly: 9500 }, { level: 19, easy: 2400, medium: 4900, hard: 7300, deadly: 10900 }, { level: 20, easy: 2800, medium: 5700, hard: 8500, deadly: 12700 }
@@ -835,13 +824,13 @@ function calculateEncounter() {
     });
 
     let multiplier = 1;
-    if (partySize < 3) { // DMG adjustment for small parties
+    if (partySize < 3) {
         if (totalMonsters === 1) multiplier = 1.5;
         else if (totalMonsters === 2) multiplier = 2;
         else if (totalMonsters >= 3 && totalMonsters <= 6) multiplier = 2.5;
         else if (totalMonsters >= 7 && totalMonsters <= 10) multiplier = 3;
         else if (totalMonsters >= 11) multiplier = 4;
-    } else { // Standard party size
+    } else {
         if (totalMonsters === 2) multiplier = 1.5;
         else if (totalMonsters >= 3 && totalMonsters <= 6) multiplier = 2;
         else if (totalMonsters >= 7 && totalMonsters <= 10) multiplier = 2.5;
@@ -895,21 +884,6 @@ function renderSrdResults(query = '') {
     } else {
         resultsDiv.innerHTML = `<p>No results found for "${query}".</p>`;
     }
-}
-
-// ======================= QUICK ROLL LOGIC ========================
-function initializeQuickRolls() {
-    document.getElementById('quick-roll-npc-name').addEventListener('click', () => {
-        const race = getRandom(Object.keys(dndData.names));
-        const name = `${getRandom(dndData.names[race].first)} ${getRandom(dndData.names[race].last || dndData.names[race].clan || '')}`.trim();
-        showAlert("Random NPC Name", `${name} (${race})`);
-    });
-    document.getElementById('quick-roll-tavern-name').addEventListener('click', () => {
-        showAlert("Random Tavern Name", getRandom(dndData.quickRolls.tavernNames));
-    });
-    document.getElementById('quick-roll-rumor').addEventListener('click', () => {
-        showAlert("Random Rumor", getRandom(dndData.quickRolls.rumors));
-    });
 }
 
 // ======================= DATA MANAGEMENT LOGIC ========================
